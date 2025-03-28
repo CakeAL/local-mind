@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tauri-deno-vue-rsbuild-template",
+  "productName": "local-mind",
   "version": "0.1.0",
-  "identifier": "com.tauri-deno-vue-rsbuild-template.app",
+  "identifier": "com.local-mind.app",
   "build": {
     "beforeDevCommand": "deno task dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "tauri-deno-vue-rsbuild-template",
+        "title": "Local Mind",
         "width": 800,
         "height": 600
       }

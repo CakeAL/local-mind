@@ -1,25 +1,30 @@
 import { defineConfig, loadEnv } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+import Components from "unplugin-vue-components/rspack";
 
-const { publicVars } = loadEnv({ prefixes: ["VITE_"] });
 const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
   plugins: [
     pluginVue(),
   ],
+  tools: {
+    rspack: {
+      plugins: [
+        Components({
+          resolvers: [
+            AntDesignVueResolver({
+              importStyle: false, // css in js
+            }),
+          ],
+        }),
+      ],
+    },
+  },
   performance: {
     chunkSplit: {
       strategy: "split-by-experience",
-    },
-  },
-  html: {
-    template: "./index.html",
-  },
-  source: {
-    define: publicVars,
-    entry: {
-      index: "./src/main.ts",
     },
   },
   dev: {

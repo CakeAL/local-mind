@@ -1,24 +1,27 @@
 {
-  "name": "tauri-deno-vue-rsbuild-template",
+  "name": "local-mind",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "rsbuild dev",
-    "build": "vue-tsc --noEmit && rsbuild build",
+    "build": "rsbuild build",
     "preview": "rsbuild preview",
     "tauri": "tauri"
   },
   "dependencies": {
+    "ant-design-vue": "^4.2.6",
+    "pinia": "^3.0.1",
     "vue": "^3.3.4",
     "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-shell": "^2"
+    "@tauri-apps/plugin-shell": "^2",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@rsbuild/plugin-vue": "1.0.7",
     "@rsbuild/core": "1.2.19",
     "typescript": "5.8.2",
-    "vue-tsc": "2.2.8",
+    "unplugin-vue-components": "^28.4.1",
     "@tauri-apps/cli": "^2"
   }
 }

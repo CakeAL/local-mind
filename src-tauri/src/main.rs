@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    tauri_deno_vue_rsbuild_template_lib::run()
+    local_mind_lib::run()
 }
