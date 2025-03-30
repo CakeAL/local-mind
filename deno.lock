@@ -1,6 +1,7 @@
 {
   "version": "4",
   "specifiers": {
+    "npm:@ant-design/icons-vue@^7.0.1": "7.0.1_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
     "npm:@rsbuild/core@1.2.19": "1.2.19_@swc+helpers@0.5.15",
     "npm:@rsbuild/plugin-vue@1.0.7": "1.0.7_@rsbuild+core@1.2.19__@swc+helpers@0.5.15_webpack@5.98.0",
     "npm:@tauri-apps/api@2": "2.4.0",
@@ -1187,6 +1188,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@ant-design/icons-vue@^7.0.1",
         "npm:@rsbuild/core@1.2.19",
         "npm:@rsbuild/plugin-vue@1.0.7",
         "npm:@tauri-apps/api@2",
