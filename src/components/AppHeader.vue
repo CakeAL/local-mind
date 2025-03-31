@@ -10,7 +10,7 @@ const toggleSiderCollapsed = () => {
 </script>
 
 <template>
-  <a-layout-header class="header">
+  <a-layout-header class="header" data-tauri-drag-region>
     <a-button
       type="text"
       shape="circle"
@@ -30,8 +30,9 @@ const toggleSiderCollapsed = () => {
   color: #fff;
   height: 40px;
   width: 100%;
-  padding-inline: 50px;
+  padding-inline: 80px;
   line-height: 40px;
   background-color: #7dbcea;
+  user-select: none;
 }
 </style>

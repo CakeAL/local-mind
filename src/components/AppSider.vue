@@ -18,5 +18,6 @@ const uiStore = useUIStore();
   line-height: 120px;
   color: #fff;
   background-color: #3ba0e9;
+  user-select: none;
 }
 </style>

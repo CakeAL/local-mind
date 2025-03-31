@@ -12,9 +12,10 @@
   "app": {
     "windows": [
       {
-        "title": "Local Mind",
+        "title": "",
         "width": 1080,
-        "height": 670
+        "height": 670,
+        "titleBarStyle": "Overlay"
       }
     ],
     "security": {
