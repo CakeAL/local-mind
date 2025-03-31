@@ -27,12 +27,11 @@ const toggleSiderCollapsed = () => {
 <style scoped>
 .header {
   text-align: left;
-  color: #fff;
   height: 40px;
   width: 100%;
   padding-inline: 80px;
   line-height: 40px;
-  background-color: #7dbcea;
+  background: transparent;
   user-select: none;
 }
 </style>

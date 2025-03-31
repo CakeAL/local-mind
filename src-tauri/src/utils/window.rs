@@ -14,3 +14,24 @@ pub fn set_titlebar_style(win: &tauri::WebviewWindow) -> Result<()> {
 
     Ok(())
 }
+
+pub fn set_background_effect(win: &tauri::WebviewWindow) -> Result<()> {
+    // 非常好 helper function，不使用 macOS Private APIs
+    win.make_transparent()?;
+    #[cfg(target_os = "windows")]
+    {
+        window_vibrancy::apply_mica(win, None)?;
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        window_vibrancy::apply_vibrancy(
+            win,
+            window_vibrancy::NSVisualEffectMaterial::HeaderView,
+            Some(window_vibrancy::NSVisualEffectState::Active),
+            None,
+        )?;
+    }
+
+    Ok(())
+}

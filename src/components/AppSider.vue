@@ -16,8 +16,7 @@ const uiStore = useUIStore();
 .sider {
   text-align: center;
   line-height: 120px;
-  color: #fff;
-  background-color: #3ba0e9;
+  background: transparent;
   user-select: none;
 }
 </style>

@@ -12,6 +12,7 @@ pub fn run() {
         .setup(|app| {
             let main_window = app.get_webview_window("main").unwrap();
             window::set_titlebar_style(&main_window)?;
+            window::set_background_effect(&main_window)?;
             Ok(())
         })
         .run(tauri::generate_context!())

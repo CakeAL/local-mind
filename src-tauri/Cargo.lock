@@ -1843,6 +1843,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-decorum",
  "tauri-plugin-shell",
+ "window-vibrancy",
 ]
 
 [[package]]
