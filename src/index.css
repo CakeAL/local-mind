@@ -4,3 +4,8 @@ html, body, #root, .app {
   overflow: hidden;
   background: transparent;
 }
+
+button.decorum-tb-btn {
+  height: 101%;
+  display: inline-block;
+}

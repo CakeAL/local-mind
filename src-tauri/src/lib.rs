@@ -1,4 +1,3 @@
-use tauri::Manager;
 use utils::window;
 
 pub mod utils;
@@ -10,9 +9,10 @@ pub fn run() {
         .plugin(tauri_plugin_decorum::init())
         .invoke_handler(tauri::generate_handler![])
         .setup(|app| {
-            let main_window = app.get_webview_window("main").unwrap();
+            let main_window = window::build_main_window(app)?;
             window::set_titlebar_style(&main_window)?;
             window::set_background_effect(&main_window)?;
+
             Ok(())
         })
         .run(tauri::generate_context!())

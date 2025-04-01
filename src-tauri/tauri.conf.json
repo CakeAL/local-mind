@@ -10,17 +10,10 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [
-      {
-        "title": "",
-        "width": 1080,
-        "height": 670,
-        "titleBarStyle": "Overlay"
-      }
-    ],
     "security": {
       "csp": null
-    }
+    },
+    "withGlobalTauri": true
   },
   "bundle": {
     "active": true,
