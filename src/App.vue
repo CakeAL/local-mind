@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import AppSider from "./components/AppSider.vue";
-import { useUIStore } from "./store/ui";
+import { themeMedia, useUIStore } from "./store/ui";
 import variables from "./styles/variables.module.scss";
 
 const uiStore = useUIStore();
+onMounted(() => {
+  // 通过更新 themeReset 的值重新触发此 getter
+  themeMedia.addEventListener("change", () => uiStore.toggleThemeReset());
+});
 </script>
 
 <template>

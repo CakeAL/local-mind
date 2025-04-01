@@ -18,7 +18,7 @@ pub fn build_main_window(app: &tauri::App) -> Result<WebviewWindow> {
     #[cfg(target_os = "windows")]
     let win_builder = win_builder.transparent(true);
     #[cfg(target_os = "macos")]
-    let win_builder = win_builder.title_bar_style(TitleBarStyle::Overlay);
+    let win_builder = win_builder.title_bar_style(tauri::TitleBarStyle::Overlay);
     Ok(win_builder.build()?)
 }
 
