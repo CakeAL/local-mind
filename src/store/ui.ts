@@ -1,4 +1,6 @@
 import { theme } from "ant-design-vue";
+import enUS from "ant-design-vue/es/locale/en_US";
+import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { defineStore } from "pinia";
 import variables from "../styles/variables.module.scss";
 
@@ -10,10 +12,21 @@ export const useUIStore = defineStore("ui", {
     themeName: "green",
     darkMode: "auto",
     themeReset: true,
+    locale: "zh_CN",
   }),
   getters: {
-    darkModeComp: (state) => state.darkMode,
-    themeConfig: (state) => {
+    getDarkMode: (state) => state.darkMode,
+    getLocale: (state) => {
+      switch (state.locale) {
+        case "zh_CN":
+          return zhCN;
+        case "en_US":
+          return enUS;
+        default:
+          return enUS;
+      }
+    },
+    getThemeConfig: (state) => {
       state.themeReset = !state.themeReset;
       document.documentElement.setAttribute("data-dark", state.darkMode);
       document.documentElement.setAttribute("data-theme", state.themeName);

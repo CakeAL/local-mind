@@ -3,7 +3,6 @@ import { onMounted } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import AppSider from "./components/AppSider.vue";
 import { themeMedia, useUIStore } from "./store/ui";
-import variables from "./styles/variables.module.scss";
 
 const uiStore = useUIStore();
 onMounted(() => {
@@ -13,12 +12,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <a-config-provider :theme="uiStore.themeConfig">
+  <a-config-provider :theme="uiStore.getThemeConfig" :locale="uiStore.getLocale">
     <a-layout class="app">
       <AppHeader></AppHeader>
       <a-layout style="background: transparent">
         <AppSider></AppSider><a-layout-content class="content">
-          Content
+          Content {{ $t('message.hello') }}
         </a-layout-content>
       </a-layout>
     </a-layout></a-config-provider>

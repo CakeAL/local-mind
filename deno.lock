@@ -13,6 +13,7 @@
     "npm:pinia@^3.0.1": "3.0.1_typescript@5.8.2_vue@3.5.13__typescript@5.8.2",
     "npm:typescript@5.8.2": "5.8.2",
     "npm:unplugin-vue-components@^28.4.1": "28.4.1_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
+    "npm:vue-i18n@^10.0.6": "10.0.6_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
     "npm:vue-router@^4.5.0": "4.5.0_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
     "npm:vue@^3.3.4": "3.5.13_typescript@5.8.2"
   },
@@ -70,6 +71,23 @@
     },
     "@emotion/unitless@0.8.1": {
       "integrity": "sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ=="
+    },
+    "@intlify/core-base@10.0.6": {
+      "integrity": "sha512-/NINGvy7t8qSCyyuqMIPmHS6CBQjqPIPVOps0Rb7xWrwwkwHJKtahiFnW1HC4iQVhzoYwEW6Js0923zTScLDiA==",
+      "dependencies": [
+        "@intlify/message-compiler",
+        "@intlify/shared"
+      ]
+    },
+    "@intlify/message-compiler@10.0.6": {
+      "integrity": "sha512-QcUYprK+e4X2lU6eJDxLuf/mUtCuVPj2RFBoFRlJJxK3wskBejzlRvh1Q0lQCi9tDOnD4iUK1ftcGylE3X3idA==",
+      "dependencies": [
+        "@intlify/shared",
+        "source-map-js"
+      ]
+    },
+    "@intlify/shared@10.0.6": {
+      "integrity": "sha512-2xqwm05YPpo7TM//+v0bzS0FWiTzsjpSMnWdt7ZXs5/ZfQIedSuBXIrskd8HZ7c/cZzo1G9ALHTksnv/74vk/Q=="
     },
     "@jridgewell/gen-mapping@0.3.8": {
       "integrity": "sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA==",
@@ -1538,6 +1556,15 @@
     "varint@6.0.0": {
       "integrity": "sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg=="
     },
+    "vue-i18n@10.0.6_vue@3.5.13__typescript@5.8.2_typescript@5.8.2": {
+      "integrity": "sha512-pQPspK5H4srzlu+47+HEY2tmiY3GyYIvSPgSBdQaYVWv7t1zj1t9p1FvHlxBXyJ17t9stG/Vxj+pykrvPWBLeQ==",
+      "dependencies": [
+        "@intlify/core-base",
+        "@intlify/shared",
+        "@vue/devtools-api@6.6.4",
+        "vue"
+      ]
+    },
     "vue-loader@17.4.2_webpack@5.98.0": {
       "integrity": "sha512-yTKOA4R/VN4jqjw4y5HrynFL8AK0Z3/Jt7eOJXEitsm0GMRHDBjCfCiuTiLP7OESvsZYo2pATCWhDqxC5ZrM6w==",
       "dependencies": [
@@ -1635,6 +1662,7 @@
         "npm:pinia@^3.0.1",
         "npm:typescript@5.8.2",
         "npm:unplugin-vue-components@^28.4.1",
+        "npm:vue-i18n@^10.0.6",
         "npm:vue-router@^4.5.0",
         "npm:vue@^3.3.4"
       ]

@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from "@rsbuild/core";
+import { defineConfig } from "@rsbuild/core";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";

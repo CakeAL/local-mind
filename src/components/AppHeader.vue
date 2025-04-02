@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons-vue";
-import { h, nextTick, onMounted } from "vue";
+import { h, onMounted } from "vue";
 import { useUIStore } from "../store/ui";
 
 const uiStore = useUIStore();
