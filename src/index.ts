@@ -7,6 +7,6 @@ import { setupPinia } from "./plugins/pinia";
 const app = createApp(App);
 
 setupPinia(app);
-setupI18n(app);
+await setupI18n(app);
 
 app.mount("#root");

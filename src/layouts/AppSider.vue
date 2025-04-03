@@ -4,7 +4,7 @@
     v-model:collapsed="uiStore.siderCollapsed"
     collapsedWidth="50"
   >
-    <a-flex justify="space-between" vertical style="height: 100%;">
+    <a-flex justify="space-between" vertical style="height: 100%">
       <a-menu
         v-model:openKeys="state.openKeys"
         v-model:selectedKeys="state.selectedKeys"
@@ -48,25 +48,28 @@
 
 <script setup lang="ts">
 import {
-  MessageOutlined,
   FolderOpenOutlined,
+  MessageOutlined,
   SettingOutlined,
 } from "@ant-design/icons-vue";
-import { h, reactive, watch } from "vue";
-import { useUIStore } from "../store/ui.ts";
+import { computed, h, reactive, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { useUIStore } from "../stores/ui.ts";
 
+const { t } = useI18n();
 const uiStore = useUIStore();
 const state = reactive({
   selectedKeys: ["1"],
   openKeys: ["sub1"],
   preOpenKeys: ["sub1"],
 });
+
 const items = reactive([
   {
-    key: "1",
+    key: "chat",
     icon: () => h(MessageOutlined),
-    label: "Option 1",
-    title: "Option 1",
+    label: computed(() => t("menu.chat")),
+    title: computed(() => t("menu.chat")),
   },
   {
     key: "2",
@@ -78,10 +81,10 @@ const items = reactive([
 // 底部固定菜单项
 const bottomItems = reactive([
   {
-    key: "3",
+    key: "setting",
     icon: () => h(SettingOutlined),
-    label: "Settings",
-    title: "Settings",
+    label: computed(() => t("menu.setting")),
+    title: computed(() => t("menu.setting")),
   },
 ]);
 watch(
