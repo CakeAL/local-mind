@@ -1,6 +1,6 @@
 import type { App } from "vue";
 import { createI18n } from "vue-i18n";
-import { loadLocalemessages } from "../locales";
+import { loadLocalemessages } from "@/locales";
 
 const locale = localStorage.getItem("locale") || "zh_CN";
 

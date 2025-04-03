@@ -2,7 +2,7 @@
 
 <template>
   <a-layout-content class="content">
-    Content
+    <RouterView />
   </a-layout-content>
 </template>
 

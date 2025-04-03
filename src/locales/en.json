@@ -1,6 +1,7 @@
 {
   "menu": {
     "chat": "Chat",
+    "file": "File",
     "setting": "Setting"
   }
 }

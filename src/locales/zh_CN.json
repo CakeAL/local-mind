@@ -1,6 +1,7 @@
 {
   "menu": {
     "chat": "聊天",
+    "file": "文件",
     "setting": "设置"
   }
 }
