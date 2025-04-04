@@ -12,6 +12,7 @@ pub fn build_main_window(app: &tauri::App) -> Result<WebviewWindow> {
             height: 670.0,
             min_height: Some(600.0),
             min_width: Some(800.0),
+            title: "Local Mind".into(),
             ..Default::default()
         },
     )?;
@@ -25,7 +26,7 @@ pub fn build_main_window(app: &tauri::App) -> Result<WebviewWindow> {
 pub fn set_titlebar_style(win: &tauri::WebviewWindow) -> Result<()> {
     #[cfg(any(target_os = "windows", target_os = "linux"))]
     {
-        win.create_overlay_titlebar()?;
+        win.create_custom_titlebar()?;
     }
 
     #[cfg(target_os = "macos")]

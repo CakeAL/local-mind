@@ -1,22 +1,12 @@
 <script setup lang="ts">
-import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons-vue";
-import { h, onMounted } from "vue";
 import { useUIStore } from "@/stores/ui";
+import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons-vue";
+import { h } from "vue";
 
 const uiStore = useUIStore();
 const toggleSiderCollapsed = () => {
   uiStore.toggleSiderCollapsed();
 };
-
-onMounted(() => {
-  // 用来更新 decorum
-  const tbEl = document.querySelector("[data-tauri-decorum-tb]");
-  if (!tbEl) return;
-  // 制造一个 DOM 变化来触发观察器
-  const temp = document.createElement("div");
-  tbEl.appendChild(temp);
-  setTimeout(() => temp.remove(), 10);
-});
 </script>
 
 <template>
