@@ -12,7 +12,7 @@ html, body, #root, .app {
 }
 
 html[data-dark="dark"] {
-  --content-bg: #000;
+  --content-bg: #181818;
   --content-color: #fff;
   --content-shadow: #2b2b2b;
 }

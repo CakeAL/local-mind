@@ -24,15 +24,15 @@ pub fn build_main_window(app: &tauri::App) -> Result<WebviewWindow> {
 }
 
 pub fn set_titlebar_style(win: &tauri::WebviewWindow) -> Result<()> {
-    #[cfg(any(target_os = "windows", target_os = "linux"))]
-    {
-        win.create_custom_titlebar()?;
-    }
+    // #[cfg(any(target_os = "windows", target_os = "linux"))]
+    // {
+    win.create_custom_titlebar()?;
+    // }
 
-    #[cfg(target_os = "macos")]
-    {
-        win.set_traffic_lights_inset(12.0, 16.0)?;
-    }
+    // #[cfg(target_os = "macos")]
+    // {
+    //     win.set_traffic_lights_inset(12.0, 32.0)?;
+    // }
 
     Ok(())
 }

@@ -12,5 +12,6 @@
   background-color: var(--content-bg);
   color: var(--content-color);
   box-shadow: -1px -1px 0.5px var(--content-shadow);
+  padding: 10px;
 }
 </style>

@@ -1,10 +1,10 @@
+import { loadLocalemessages } from "@/locales";
+import { i18n } from "@/plugins/i18n";
+import variables from "@/styles/variables.module.scss";
 import { theme } from "ant-design-vue";
 import enUS from "ant-design-vue/es/locale/en_US";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { defineStore } from "pinia";
-import { loadLocalemessages } from "@/locales";
-import { i18n } from "@/plugins/i18n";
-import variables from "@/styles/variables.module.scss";
 
 export const themeMedia = window.matchMedia("(prefers-color-scheme: dark)");
 

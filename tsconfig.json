@@ -1,33 +1,33 @@
 {
-    "compilerOptions": {
-        "lib": [
-            "DOM",
-            "ES2020"
-        ],
-        "jsx": "preserve",
-        "target": "ES2020",
-        "noEmit": true,
-        "skipLibCheck": true,
-        "jsxImportSource": "vue",
-        "useDefineForClassFields": true,
-        /* modules */
-        "module": "ESNext",
-        "isolatedModules": true,
-        "resolveJsonModule": true,
-        "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        /* type checking */
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "baseUrl": "./", // 解析非相对模块的基地址，默认是当前目录
-        "paths": { //路径映射，相对于baseUrl
-            "@/*": [
-                "src/*"
-            ]
-        }
-    },
-    "include": [
-        "src"
-    ]
+  "compilerOptions": {
+    "lib": [
+      "DOM",
+      "ES2020"
+    ],
+    "jsx": "preserve",
+    "target": "ES2020",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "jsxImportSource": "vue",
+    "useDefineForClassFields": true,
+    /* modules */
+    "module": "ESNext",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    /* type checking */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": "./", // 解析非相对模块的基地址，默认是当前目录
+    "paths": { // 路径映射，相对于baseUrl
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
 }
