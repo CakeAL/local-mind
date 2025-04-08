@@ -1,4 +1,4 @@
-import Chat from "@/views/Chat.vue";
+import Chat from "@/views/Chat/Chat.vue";
 import File from "@/views/File.vue";
 import Setting from "@/views/Setting.vue";
 import { createRouter } from "vue-router";

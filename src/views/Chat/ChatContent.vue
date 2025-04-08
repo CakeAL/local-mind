@@ -1,5 +1,3 @@
 <script setup lang="ts"></script>
-<template>
-  <h1>我是Chat</h1>
-</template>
+<template></template>
 <style scoped></style>

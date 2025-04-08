@@ -9,12 +9,14 @@ html, body, #root, .app {
   --content-bg: #fff;
   --content-color: #000;
   --content-shadow: #eaeaea;
+  --content-select: rgba(0, 0, 0, 0.05);
 }
 
 html[data-dark="dark"] {
   --content-bg: #181818;
   --content-color: #fff;
   --content-shadow: #2b2b2b;
+  --content-select: rgba(255, 255, 255, 0.05);
 }
 
 button.decorum-tb-btn {

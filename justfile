@@ -10,11 +10,11 @@ build:
 dev: 
     cargo tauri dev
 
-build-android:
-    cargo tauri android build --apk --target aarch64
-
 clippy: 
     cd src-tauri && cargo clippy
 
 clean: 
     cd src-tauri && cargo clean
+
+fmt:
+    dprint fmt
