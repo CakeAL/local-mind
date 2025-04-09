@@ -1,6 +1,9 @@
 use ollama_rust_api::Ollama;
+use sea_orm::DbConn;
+use tokio::sync::RwLock;
 
 #[derive(Default)]
 pub struct AppState {
-    ollama: Ollama,
+    pub ollama: RwLock<Ollama>,
+    pub db: RwLock<DbConn>,
 }
