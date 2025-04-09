@@ -18,5 +18,6 @@ declare module 'vue' {
     AMenu: typeof import('ant-design-vue/es')['Menu']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SideItem: typeof import('./src/components/SideItem.vue')['default']
   }
 }

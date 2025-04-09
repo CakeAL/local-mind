@@ -7,7 +7,7 @@ const { title, showSettingIcon = false } = defineProps<{
 }>();
 </script>
 <template>
-  <a-flex justify="space-between" align="center" class="side-item select">
+  <a-flex justify="space-between" align="center" class="side-item">
     <span>{{ title }}</span>
     <a-button
       v-if="showSettingIcon"
@@ -24,10 +24,13 @@ const { title, showSettingIcon = false } = defineProps<{
   width: 100%;
   border-radius: 50px;
   padding: 0 10px;
+  border: 1px solid transparent;
 }
 
-.select {
+.select, .side-item:hover {
   border: 1px solid var(--content-shadow);
   background-color: var(--content-select);
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
 }
 </style>

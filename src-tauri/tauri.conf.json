@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "local-mind",
+  "productName": "Local Mind",
   "version": "0.1.0",
   "identifier": "com.local-mind.app",
   "build": {
@@ -24,6 +24,25 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "macOS": {
+      "dmg": {
+        "appPosition": {
+          "x": 160,
+          "y": 185
+        },
+        "applicationFolderPosition": {
+          "x": 500,
+          "y": 185
+        },
+        "windowSize": {
+          "height": 400,
+          "width": 660
+        },
+        "background": "../pic/bg.svg"
+      },
+      "minimumSystemVersion": "10.15"
+    },
+    "copyright": "Copyright © 2025 CakeAL All Rights Reserved"
   }
 }
