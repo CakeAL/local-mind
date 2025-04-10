@@ -1,8 +1,6 @@
 use anyhow::Result;
 use entities::app_state::AppState;
 use tauri::{async_runtime::spawn, AppHandle, Manager};
-use tracing::level_filters::LevelFilter;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use utils::{path, window};
 
 pub mod dbaccess;
@@ -11,12 +9,7 @@ pub mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tracing_subscriber::registry()
-        .with(tracing_subscriber::fmt::layer())
-        .with(tracing_subscriber::filter::filter_fn(|metadata| {
-            metadata.level() > &LevelFilter::TRACE
-        }))
-        .init();
+    tracing_subscriber::fmt::init();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
