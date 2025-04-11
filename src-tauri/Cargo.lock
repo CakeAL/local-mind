@@ -497,10 +497,8 @@ checksum = "1a7964611d71df112cb1730f2ee67324fcf4d0fc6606acbbe9bfe06df124637c"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
- "js-sys",
  "num-traits",
  "serde",
- "wasm-bindgen",
  "windows-link",
 ]
 
@@ -2282,7 +2280,6 @@ name = "local-mind"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "chrono",
  "ollama-rust-api",
  "reqwest",
  "sea-orm",
@@ -2846,7 +2843,7 @@ dependencies = [
 [[package]]
 name = "ollama-rust-api"
 version = "0.1.0"
-source = "git+https://github.com/CakeAL/ollama-rust-api#27b3b1764499f016f11311b0be2eb6b196a2318e"
+source = "git+https://github.com/CakeAL/ollama-rust-api#02177cafb4b45a367a67fc39e1ae2730322a5292"
 dependencies = [
  "reqwest",
  "serde",
