@@ -1,4 +1,7 @@
-use sea_orm::{ConnectionTrait, DbConn, Schema, Statement};
+use ollama_rust_api::model::parameter::Parameter;
+use sea_orm::ActiveModelTrait;
+use sea_orm::{ActiveValue::Set, ConnectionTrait, DbConn, Schema, Statement};
+use uuid::Uuid;
 
 use crate::entities::assistant;
 
@@ -19,4 +22,16 @@ pub async fn create_assistant_table(db: &DbConn) -> Result<(), sea_orm::DbErr> {
         tracing::info!("Table assistant has created.");
     }
     Ok(())
+}
+
+/// 新建一个助手
+pub async fn new_assistant(db: &DbConn) -> Result<assistant::Model, sea_orm::DbErr> {
+    let new_assistant = assistant::ActiveModel {
+        name: Set("Default Assistant".to_string()),
+        uuid: Set(Uuid::new_v4()),
+        parameter: Set(serde_json::json!(Parameter::default())),
+        ..Default::default()
+    };
+    let new_assistant: assistant::Model = new_assistant.insert(db).await?;
+    Ok(new_assistant)
 }
