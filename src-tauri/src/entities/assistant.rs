@@ -6,6 +6,7 @@ use sea_orm::entity::prelude::*;
 pub struct Model {
     #[sea_orm(primary_key)]
     id: i64,
+    #[sea_orm(indexed)]
     uuid: Uuid,
     name: String,
     parameter: Json

@@ -1,5 +1,7 @@
 use ollama_rust_api::model::parameter::Parameter;
-use sea_orm::ActiveModelTrait;
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, EntityTrait, ModelTrait, QueryFilter, QueryOrder, QuerySelect,
+};
 use sea_orm::{ActiveValue::Set, ConnectionTrait, DbConn, Schema, Statement};
 use uuid::Uuid;
 
@@ -34,4 +36,69 @@ pub async fn new_assistant(db: &DbConn) -> Result<assistant::Model, sea_orm::DbE
     };
     let new_assistant: assistant::Model = new_assistant.insert(db).await?;
     Ok(new_assistant)
+}
+
+/// 返回所有助手
+pub async fn get_all_assistant(db: &DbConn) -> Result<Vec<assistant::Model>, sea_orm::DbErr> {
+    let assistants = assistant::Entity::find()
+        .select_only()
+        .columns([
+            assistant::Column::Id,
+            assistant::Column::Uuid,
+            assistant::Column::Name,
+        ])
+        .order_by_desc(assistant::Column::Id)
+        .all(db)
+        .await?;
+    Ok(assistants)
+}
+
+/// 返回某个助手的配置
+pub async fn get_assistant_para(
+    db: &DbConn,
+    uuid: Uuid,
+) -> Result<serde_json::Value, sea_orm::DbErr> {
+    let v = assistant::Entity::find()
+        .filter(assistant::Column::Uuid.eq(uuid))
+        .select_only()
+        .column(assistant::Column::Parameter)
+        .into_json()
+        .one(db)
+        .await?
+        .ok_or(sea_orm::DbErr::RecordNotFound(
+            "No such uuid to assistant".into(),
+        ))?;
+    Ok(v)
+}
+
+/// 更新某个助手的配置
+pub async fn update_assistant_para(
+    db: &DbConn,
+    uuid: Uuid,
+    para: serde_json::Value,
+) -> Result<assistant::Model, sea_orm::DbErr> {
+    let assistant = assistant::Entity::find()
+        .filter(assistant::Column::Uuid.eq(uuid))
+        .one(db)
+        .await?
+        .ok_or(sea_orm::DbErr::RecordNotFound(
+            "No such uuid to assistant".into(),
+        ))?;
+    let mut assistant: assistant::ActiveModel = assistant.into();
+    assistant.parameter = Set(para);
+    let updated_assistant = assistant.update(db).await?;
+    Ok(updated_assistant)
+}
+
+/// 删除某个助手
+pub async fn delete_assistant(db: &DbConn, uuid: Uuid) -> Result<bool, sea_orm::DbErr> {
+    let assistant = assistant::Entity::find()
+        .filter(assistant::Column::Uuid.eq(uuid))
+        .one(db)
+        .await?
+        .ok_or(sea_orm::DbErr::RecordNotFound(
+            "No such uuid to assistant".into(),
+        ))?;
+    let res = assistant.delete(db).await?;
+    Ok(res.rows_affected == 1)
 }
