@@ -1,10 +1,10 @@
 use anyhow::Result;
-use entities::app_state::AppState;
+use models::app_state::AppState;
 use tauri::{async_runtime::spawn, AppHandle, Manager};
 use utils::{path, window};
 
 pub mod dbaccess;
-pub mod entities;
+pub mod models;
 pub mod utils;
 pub mod commands;
 

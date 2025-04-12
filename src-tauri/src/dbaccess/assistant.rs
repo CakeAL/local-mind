@@ -5,7 +5,7 @@ use sea_orm::{
 use sea_orm::{ActiveValue::Set, ConnectionTrait, DbConn, Schema, Statement};
 use uuid::Uuid;
 
-use crate::entities::assistant;
+use crate::models::assistant;
 
 /// 用来创建 assistant 表
 pub async fn create_assistant_table(db: &DbConn) -> Result<(), sea_orm::DbErr> {
@@ -32,6 +32,7 @@ pub async fn new_assistant(db: &DbConn) -> Result<assistant::Model, sea_orm::DbE
         name: Set("Default Assistant".to_string()),
         uuid: Set(Uuid::new_v4()),
         parameter: Set(serde_json::json!(Parameter::default())),
+        context_num: Set(5),
         ..Default::default()
     };
     let new_assistant: assistant::Model = new_assistant.insert(db).await?;
@@ -39,13 +40,15 @@ pub async fn new_assistant(db: &DbConn) -> Result<assistant::Model, sea_orm::DbE
 }
 
 /// 返回所有助手
-pub async fn get_all_assistant(db: &DbConn) -> Result<Vec<assistant::Model>, sea_orm::DbErr> {
+pub async fn select_all_assistant(db: &DbConn) -> Result<Vec<assistant::Model>, sea_orm::DbErr> {
     let assistants = assistant::Entity::find()
         .select_only()
         .columns([
             assistant::Column::Id,
             assistant::Column::Uuid,
             assistant::Column::Name,
+            assistant::Column::Model,
+            assistant::Column::ContextNum,
         ])
         .order_by_desc(assistant::Column::Id)
         .all(db)
@@ -54,14 +57,14 @@ pub async fn get_all_assistant(db: &DbConn) -> Result<Vec<assistant::Model>, sea
 }
 
 /// 返回某个助手的配置
-pub async fn get_assistant_para(
+pub async fn select_assistant_config(
     db: &DbConn,
     uuid: Uuid,
 ) -> Result<serde_json::Value, sea_orm::DbErr> {
     let v = assistant::Entity::find()
         .filter(assistant::Column::Uuid.eq(uuid))
         .select_only()
-        .column(assistant::Column::Parameter)
+        .columns([assistant::Column::Parameter, assistant::Column::ContextNum])
         .into_json()
         .one(db)
         .await?
@@ -72,10 +75,11 @@ pub async fn get_assistant_para(
 }
 
 /// 更新某个助手的配置
-pub async fn update_assistant_para(
+pub async fn update_assistant_config(
     db: &DbConn,
     uuid: Uuid,
     para: serde_json::Value,
+    context_num: Option<u64>,
 ) -> Result<assistant::Model, sea_orm::DbErr> {
     let assistant = assistant::Entity::find()
         .filter(assistant::Column::Uuid.eq(uuid))
@@ -86,6 +90,9 @@ pub async fn update_assistant_para(
         ))?;
     let mut assistant: assistant::ActiveModel = assistant.into();
     assistant.parameter = Set(para);
+    if let Some(context_num) = context_num {
+        assistant.context_num = Set(context_num);
+    }
     let updated_assistant = assistant.update(db).await?;
     Ok(updated_assistant)
 }

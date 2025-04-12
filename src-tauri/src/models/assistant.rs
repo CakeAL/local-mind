@@ -8,7 +8,9 @@ pub struct Model {
     id: i64,
     #[sea_orm(indexed)]
     uuid: Uuid,
-    name: String,
+    name: String, // 该助手名
+    model: String, // 调用模型名称 "deepseek-r1:8b"
+    context_num: u64, // 上下文数, 默认: 5
     parameter: Json
 }
 
