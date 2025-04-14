@@ -27,7 +27,7 @@ pub async fn create_assistant_table(db: &DbConn) -> Result<(), sea_orm::DbErr> {
 }
 
 /// 新建一个助手
-pub async fn new_assistant(db: &DbConn) -> Result<assistant::Model, sea_orm::DbErr> {
+pub async fn insert_assistant(db: &DbConn) -> Result<assistant::Model, sea_orm::DbErr> {
     let new_assistant = assistant::ActiveModel {
         name: Set("Default Assistant".to_string()),
         uuid: Set(Uuid::new_v4()),

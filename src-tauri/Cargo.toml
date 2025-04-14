@@ -29,6 +29,7 @@ tauri = { version = "2", features = [] }
 tauri-plugin-decorum = { git = "https://github.com/CakeAL/tauri-plugin-decorum" }
 tauri-plugin-shell = "2.2.1"
 tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1.17"
 tracing = "0.1"
 tracing-subscriber = "0.3"
 uuid = { version = "1.16.0", features = ["v4"] }

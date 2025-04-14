@@ -39,7 +39,7 @@ pub async fn insert_user_message(
         model: Set(model),
         created_at: Set(Utc::now()),
         content: Set(content),
-        role: Set("user".into()),
+        role: Set(conversation::RoleType::User),
         ..Default::default()
     };
     let new_message = new_message.insert(db).await?;
@@ -51,11 +51,12 @@ pub async fn insert_assistant_message(
     db: &DbConn,
     assistant_uuid: Uuid,
     chat_response: ChatResponse,
+    content: String,
 ) -> Result<conversation::Model, sea_orm::DbErr> {
     let ChatResponse {
         model,
         created_at,
-        message,
+        message: _,
         done: _,
         total_duration,
         load_duration,
@@ -69,8 +70,8 @@ pub async fn insert_assistant_message(
         assistant_uuid: Set(assistant_uuid),
         model: Set(model),
         created_at: Set(created_at),
-        content: Set(message.content),
-        role: Set("assistant".into()), // 临时就先这样了
+        content: Set(content),
+        role: Set(conversation::RoleType::Assistant), // 临时就先这样了
         total_duration: Set(total_duration.unwrap_or_default()),
         load_duration: Set(load_duration.unwrap_or_default()),
         prompt_eval_count: Set(prompt_eval_count.unwrap_or_default()),

@@ -28,13 +28,13 @@ pub struct AssistantInfo {
     context_num: u64,
 }
 
-impl Into<AssistantInfo> for Model {
-    fn into(self) -> AssistantInfo {
-        AssistantInfo {
-            uuid: self.uuid,
-            name: self.name,
-            model: self.model,
-            context_num: self.context_num,
+impl From<Model> for AssistantInfo {
+    fn from(m: Model) -> Self {
+        Self {
+            uuid: m.uuid,
+            name: m.name,
+            model: m.model,
+            context_num: m.context_num,
         }
     }
 }

@@ -1,2 +1,2 @@
-pub mod ollama;
+pub mod conversation;
 pub mod assistant;

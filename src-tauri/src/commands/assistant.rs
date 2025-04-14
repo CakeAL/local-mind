@@ -24,7 +24,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
 #[tauri::command]
 pub async fn new_assistant(state: tauri::State<'_, AppState>) -> Result<serde_json::Value, String> {
     let db = state.db.read().await;
-    let new_assistant = dbaccess::assistant::new_assistant(&db)
+    let new_assistant = dbaccess::assistant::insert_assistant(&db)
         .await
         .map_err(|e| e.to_string())?;
     let assistant_info: AssistantInfo = new_assistant.into();

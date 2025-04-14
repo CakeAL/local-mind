@@ -2294,6 +2294,7 @@ dependencies = [
  "tauri-plugin-decorum",
  "tauri-plugin-shell",
  "tokio",
+ "tokio-stream",
  "tracing",
  "tracing-subscriber",
  "uuid",
