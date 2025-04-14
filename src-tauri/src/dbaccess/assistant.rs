@@ -40,18 +40,16 @@ pub async fn insert_assistant(db: &DbConn) -> Result<assistant::Model, sea_orm::
 }
 
 /// 返回所有助手
-pub async fn select_all_assistant(db: &DbConn) -> Result<Vec<serde_json::Value>, sea_orm::DbErr> {
+pub async fn select_all_assistant(db: &DbConn) -> Result<Vec<assistant::Model>, sea_orm::DbErr> {
     let assistants = assistant::Entity::find()
         .select_only()
         .columns([
-            assistant::Column::Id,
             assistant::Column::Uuid,
             assistant::Column::Name,
             assistant::Column::Model,
             assistant::Column::ContextNum,
         ])
         .order_by_desc(assistant::Column::Id)
-        .into_json()
         .all(db)
         .await?;
     Ok(assistants)

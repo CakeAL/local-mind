@@ -22,10 +22,10 @@ impl ActiveModelBehavior for ActiveModel {}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AssistantInfo {
-    uuid: Uuid,
-    name: String,
-    model: String,
-    context_num: u64,
+    pub uuid: Uuid,
+    pub name: String,
+    pub model: String,
+    pub context_num: u64,
 }
 
 impl From<Model> for AssistantInfo {

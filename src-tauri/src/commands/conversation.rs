@@ -3,6 +3,7 @@ use ollama_rust_api::model::{
     chat::{ChatRequestParameters, Message},
     parameter::Parameter,
 };
+use sea_orm::DbConn;
 use serde::Serialize;
 use tauri::{
     ipc::Channel,
@@ -12,11 +13,18 @@ use tauri::{
 use tokio_stream::StreamExt;
 use uuid::Uuid;
 
-use crate::{dbaccess, models::app_state::AppState};
+use crate::{
+    dbaccess,
+    models::{app_state::AppState, assistant::AssistantInfo},
+};
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("conversation_plugin")
-        .invoke_handler(tauri::generate_handler![user_send_message])
+        .invoke_handler(tauri::generate_handler![
+            user_send_message,
+            regenerate_assistant_message,
+            delete_message
+        ])
         .build()
 }
 
@@ -37,26 +45,14 @@ pub enum ChatResponseEvent {
     },
 }
 
-#[tauri::command]
-pub async fn user_send_message(
-    state: tauri::State<'_, AppState>,
+pub async fn generate_message(
+    state: &tauri::State<'_, AppState>,
+    db: &DbConn,
     assistant_uuid: Uuid,
-    model: String,
-    content: String,
     context_num: u64,
+    model: String,
     on_event: Channel<ChatResponseEvent>,
 ) -> Result<(), String> {
-    let db = state.db.read().await;
-    // 插入用户消息至数据库
-    let user_message_model =
-        dbaccess::conversation::insert_user_message(&db, assistant_uuid, model.to_owned(), content)
-            .await
-            .map_err(|e| e.to_string())?;
-    on_event
-        .send(ChatResponseEvent::Started {
-            user_message: serde_json::json!(user_message_model),
-        })
-        .map_err(|e| e.to_string())?;
     // 取出最近 context_num 条消息（作为上下文消息）
     let nearest_messages =
         dbaccess::conversation::select_message_by_uuid(&db, assistant_uuid, Some(context_num))
@@ -122,4 +118,67 @@ pub async fn user_send_message(
         }
         None => Err("Generate Reply Failed due to Ollama inner Error.".into()),
     }
+}
+
+#[tauri::command]
+pub async fn user_send_message(
+    state: tauri::State<'_, AppState>,
+    assistant_info: AssistantInfo,
+    content: String,
+    on_event: Channel<ChatResponseEvent>,
+) -> Result<(), String> {
+    let AssistantInfo {
+        uuid: assistant_uuid,
+        name: _,
+        model,
+        context_num,
+    } = assistant_info;
+    let db = state.db.read().await;
+    // 插入用户消息至数据库
+    let user_message_model =
+        dbaccess::conversation::insert_user_message(&db, assistant_uuid, model.to_owned(), content)
+            .await
+            .map_err(|e| e.to_string())?;
+    on_event
+        .send(ChatResponseEvent::Started {
+            user_message: serde_json::json!(user_message_model),
+        })
+        .map_err(|e| e.to_string())?;
+    // 让大模型生成新的消息
+    generate_message(&state, &db, assistant_uuid, context_num, model, on_event).await
+}
+
+#[tauri::command]
+pub async fn regenerate_assistant_message(
+    state: tauri::State<'_, AppState>,
+    assistant_info: AssistantInfo,
+    message_id: i64,
+    on_event: Channel<ChatResponseEvent>,
+) -> Result<(), String> {
+    let AssistantInfo {
+        uuid: assistant_uuid,
+        name: _,
+        model,
+        context_num,
+    } = assistant_info;
+    let db = state.db.read().await;
+    // 删除当前消息
+    delete_message(state.clone(), message_id).await?;
+    // 让大模型生成新的消息
+    generate_message(&state, &db, assistant_uuid, context_num, model, on_event).await
+}
+
+#[tauri::command]
+pub async fn delete_message(
+    state: tauri::State<'_, AppState>,
+    message_id: i64,
+) -> Result<(), String> {
+    let db = state.db.read().await;
+    if !dbaccess::conversation::delete_message(&db, message_id)
+        .await
+        .map_err(|e| e.to_string())?
+    {
+        return Err("No such message.".into());
+    }
+    Ok(())
 }
