@@ -1,22 +1,41 @@
 <script setup lang="ts">
 import { SettingOutlined } from "@ant-design/icons-vue";
 import { h } from "vue";
-const { title, showSettingIcon = false } = defineProps<{
+const {
+  title,
+  showSettingIcon = false,
+  selected = false,
+  callback = () => {},
+  battonCallback = () => {},
+} = defineProps<{
   title: string;
   showSettingIcon?: boolean;
+  selected?: boolean;
+  callback?: Function;
+  buttonCallback?: Function;
 }>();
 </script>
 <template>
-  <a-flex justify="space-between" align="center" class="side-item">
-    <span>{{ title }}</span>
-    <a-button
-      v-if="showSettingIcon"
-      type="text"
-      shape="circle"
-      :icon="h(SettingOutlined)"
-      size="small"
-    ></a-button>
-  </a-flex>
+  <div @click="callback">
+    <a-flex
+      justify="space-between"
+      align="center"
+      class="side-item"
+      :class="{ 'selected': selected }"
+    >
+      <span
+        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+      >{{ title }}</span>
+      <a-button
+        v-if="showSettingIcon"
+        type="text"
+        shape="circle"
+        :icon="h(SettingOutlined)"
+        size="small"
+        @click="buttonCallback"
+      ></a-button>
+    </a-flex>
+  </div>
 </template>
 <style scoped>
 .side-item {
@@ -27,7 +46,7 @@ const { title, showSettingIcon = false } = defineProps<{
   border: 1px solid transparent;
 }
 
-.select, .side-item:hover {
+.selected, .side-item:hover {
   border: 1px solid var(--content-shadow);
   background-color: var(--content-select);
   cursor: pointer;

@@ -22,7 +22,6 @@ import ChatSider from "./ChatSider.vue";
   height: 100%;
   background: transparent;
   box-shadow: 1px 0 0.5px var(--content-shadow);
-  padding: 10px;
 }
 
 .chat-content {

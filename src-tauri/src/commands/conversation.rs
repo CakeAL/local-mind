@@ -55,7 +55,7 @@ pub async fn generate_message(
 ) -> Result<(), String> {
     // 取出最近 context_num 条消息（作为上下文消息）
     let nearest_messages =
-        dbaccess::conversation::select_message_by_uuid(&db, assistant_uuid, Some(context_num))
+        dbaccess::conversation::select_message_by_uuid(db, assistant_uuid, Some(context_num))
             .await
             .map_err(|e| e.to_string())?
             .into_iter()
@@ -66,7 +66,7 @@ pub async fn generate_message(
             })
             .collect::<Vec<Message>>();
     // 取出该 assistant 配置信息
-    let para_value = dbaccess::assistant::select_assistant_config(&db, assistant_uuid)
+    let para_value = dbaccess::assistant::select_assistant_config(db, assistant_uuid)
         .await
         .map_err(|e| e.to_string())?;
     let para = serde_json::from_value::<Parameter>(para_value).map_err(|e| e.to_string())?;
@@ -102,7 +102,7 @@ pub async fn generate_message(
     match final_res {
         Some(res) => {
             let assistant_message_model = dbaccess::conversation::insert_assistant_message(
-                &db,
+                db,
                 assistant_uuid,
                 res,
                 final_content,

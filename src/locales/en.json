@@ -3,5 +3,8 @@
     "chat": "Chat",
     "file": "File",
     "setting": "Setting"
+  },
+  "chat": {
+    "new-assistant": "+ New Assistant"
   }
 }
