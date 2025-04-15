@@ -19,7 +19,7 @@ use crate::{
 };
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("conversation_plugin")
+    Builder::new("conversation")
         .invoke_handler(tauri::generate_handler![
             user_send_message,
             regenerate_assistant_message,

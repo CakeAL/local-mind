@@ -1,20 +1,32 @@
 <script setup lang="ts">
 import SideItem from "@/components/SideItem.vue";
-import { onMounted } from "vue";
+import { AssistantInfo } from "@/models/assistant";
+import { invoke } from "@tauri-apps/api/core";
+import { message } from "ant-design-vue";
+import { onMounted, ref } from "vue";
+
+const assistants = ref<AssistantInfo[]>([]);
 onMounted(() => {
 });
 
 const newAssistant = async () => {
-  console.log("你好");
+  let res = await invoke<AssistantInfo>("plugin:assistant|new_assistant").catch(
+    (err) => message.warning(err),
+  );
+  if (res.uuid) {
+    assistants.value.push(res);
+  }
 };
 </script>
 <template>
   <a-space direction="vertical" class="list">
     <SideItem
-      title="Test TitleTitleTitleTitleTitleTitleTitle"
+      v-for="(assistant, index) in assistants"
+      :key="index"
+      :title="assistant.name"
       :showSettingIcon="true"
     />
-    <a-divider style="margin: 0" />
+    <a-divider style="margin: 0" v-if="assistants.length !== 0" />
     <SideItem
       :title="$t('chat.new-assistant')"
       :callback="newAssistant"

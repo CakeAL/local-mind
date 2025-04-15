@@ -10,7 +10,7 @@ use crate::{
 };
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("assistant_command")
+    Builder::new("assistant")
         .invoke_handler(tauri::generate_handler![
             new_assistant,
             get_all_assistant,

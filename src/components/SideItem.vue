@@ -6,13 +6,13 @@ const {
   showSettingIcon = false,
   selected = false,
   callback = () => {},
-  battonCallback = () => {},
+  buttonCallback = () => {},
 } = defineProps<{
   title: string;
   showSettingIcon?: boolean;
   selected?: boolean;
-  callback?: Function;
-  buttonCallback?: Function;
+  callback?: () => {};
+  buttonCallback?: () => {};
 }>();
 </script>
 <template>
