@@ -5,11 +5,7 @@ use ollama_rust_api::model::{
 };
 use sea_orm::DbConn;
 use serde::Serialize;
-use tauri::{
-    ipc::Channel,
-    plugin::{Builder, TauriPlugin},
-    Runtime,
-};
+use tauri::ipc::Channel;
 use tokio_stream::StreamExt;
 use uuid::Uuid;
 
@@ -17,16 +13,6 @@ use crate::{
     dbaccess,
     models::{app_state::AppState, assistant::AssistantInfo},
 };
-
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("conversation")
-        .invoke_handler(tauri::generate_handler![
-            user_send_message,
-            regenerate_assistant_message,
-            delete_message
-        ])
-        .build()
-}
 
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase", tag = "event", content = "data")]

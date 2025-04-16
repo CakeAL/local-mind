@@ -2,6 +2,7 @@ use anyhow::Result;
 use models::app_state::AppState;
 use tauri::{async_runtime::spawn, AppHandle, Manager};
 use utils::{path, window};
+use commands::*;
 
 pub mod dbaccess;
 pub mod models;
@@ -15,8 +16,6 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_decorum::init())
-        .plugin(commands::conversation::init())
-        .plugin(commands::assistant::init())
         .manage(AppState::default())
         .setup(|app| {
             let main_window = window::build_main_window(app)?;
@@ -25,6 +24,16 @@ pub fn run() {
             spawn(setup(app.handle().clone()));
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![
+            assistant::new_assistant,
+            assistant::get_all_assistant,
+            assistant::get_assistant_config,
+            assistant::update_assistant_config,
+            assistant::delete_assistant,
+            conversation::user_send_message,
+            conversation::regenerate_assistant_message,
+            conversation::delete_message
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

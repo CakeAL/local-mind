@@ -10,7 +10,7 @@ onMounted(() => {
 });
 
 const newAssistant = async () => {
-  let res = await invoke<AssistantInfo>("plugin:assistant|new_assistant").catch(
+  let res = await invoke<AssistantInfo>("new_assistant").catch(
     (err) => message.warning(err),
   );
   if (res.uuid) {

@@ -1,25 +1,9 @@
-use tauri::{
-    plugin::{Builder, TauriPlugin},
-    Runtime,
-};
 use uuid::Uuid;
 
 use crate::{
     dbaccess,
     models::{app_state::AppState, assistant::AssistantInfo},
 };
-
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("assistant")
-        .invoke_handler(tauri::generate_handler![
-            new_assistant,
-            get_all_assistant,
-            get_assistant_config,
-            update_assistant_config,
-            delete_assistant
-        ])
-        .build()
-}
 
 #[tauri::command]
 pub async fn new_assistant(state: tauri::State<'_, AppState>) -> Result<AssistantInfo, String> {
