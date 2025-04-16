@@ -1,3 +1,4 @@
+use ollama_rust_api::model::models::ModelList;
 use uuid::Uuid;
 
 use crate::{
@@ -6,9 +7,15 @@ use crate::{
 };
 
 #[tauri::command]
-pub async fn new_assistant(state: tauri::State<'_, AppState>) -> Result<AssistantInfo, String> {
+pub async fn list_models(state: tauri::State<'_, AppState>) -> Result<ModelList, String> {
+    let ollama = state.ollama.read().await;
+    ollama.tags().await.map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn new_assistant(state: tauri::State<'_, AppState>, model: String) -> Result<AssistantInfo, String> {
     let db = state.db.read().await;
-    let new_assistant = dbaccess::assistant::insert_assistant(&db)
+    let new_assistant = dbaccess::assistant::insert_assistant(&db, model)
         .await
         .map_err(|e| e.to_string())?;
     let assistant_info: AssistantInfo = new_assistant.into();

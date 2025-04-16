@@ -5,6 +5,7 @@
     "setting": "Setting"
   },
   "chat": {
-    "new-assistant": "+ New Assistant"
+    "new-assistant": "+ New Assistant",
+    "select-model": "Select an ollama model"
   }
 }

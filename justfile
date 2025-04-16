@@ -18,3 +18,6 @@ clean:
 
 fmt:
     dprint fmt
+
+update: 
+    cd src-tauri && cargo update

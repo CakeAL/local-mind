@@ -1,13 +1,13 @@
 use anyhow::Result;
+use commands::*;
 use models::app_state::AppState;
 use tauri::{async_runtime::spawn, AppHandle, Manager};
 use utils::{path, window};
-use commands::*;
 
+pub mod commands;
 pub mod dbaccess;
 pub mod models;
 pub mod utils;
-pub mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -25,6 +25,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            assistant::list_models,
             assistant::new_assistant,
             assistant::get_all_assistant,
             assistant::get_assistant_config,

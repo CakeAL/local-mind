@@ -5,6 +5,7 @@
     "setting": "设置"
   },
   "chat": {
-    "new-assistant": "+ 新建助手"
+    "new-assistant": "+ 新建助手",
+    "select-model": "请选择一个 Ollama 模型"
   }
 }
