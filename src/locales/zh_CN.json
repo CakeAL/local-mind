@@ -6,6 +6,7 @@
   },
   "chat": {
     "new-assistant": "+ 新建助手",
-    "select-model": "请选择一个 Ollama 模型"
+    "select-model": "请选择一个 Ollama 模型",
+    "no-models": "并未获取到任何可用模型，请先在 Ollama 中拉取任一可用模型。"
   }
 }

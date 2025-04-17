@@ -6,6 +6,7 @@
   },
   "chat": {
     "new-assistant": "+ New Assistant",
-    "select-model": "Select an ollama model"
+    "select-model": "Select an ollama model",
+    "no-models": "There is no model, please install ollama first and pull any model."
   }
 }

@@ -1,4 +1,4 @@
-use sea_orm::entity::prelude::*;
+use sea_orm::{entity::prelude::*, FromQueryResult};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -11,7 +11,7 @@ pub struct Model {
     pub uuid: Uuid,
     pub name: String,     // 该助手名
     pub model: String,    // 调用模型名称 "deepseek-r1:8b"
-    pub context_num: u64, // 上下文数, 默认: 5
+    pub context_num: i64, // 上下文数, 默认: 5
     pub parameter: Json,
 }
 
@@ -20,17 +20,19 @@ pub enum Relation {}
 
 impl ActiveModelBehavior for ActiveModel {}
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, FromQueryResult)]
 pub struct AssistantInfo {
+    pub id: i64,
     pub uuid: Uuid,
     pub name: String,
     pub model: String,
-    pub context_num: u64,
+    pub context_num: i64,
 }
 
 impl From<Model> for AssistantInfo {
     fn from(m: Model) -> Self {
         Self {
+            id: m.id,
             uuid: m.uuid,
             name: m.name,
             model: m.model,

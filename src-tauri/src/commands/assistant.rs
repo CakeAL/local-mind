@@ -13,7 +13,10 @@ pub async fn list_models(state: tauri::State<'_, AppState>) -> Result<ModelList,
 }
 
 #[tauri::command]
-pub async fn new_assistant(state: tauri::State<'_, AppState>, model: String) -> Result<AssistantInfo, String> {
+pub async fn new_assistant(
+    state: tauri::State<'_, AppState>,
+    model: String,
+) -> Result<AssistantInfo, String> {
     let db = state.db.read().await;
     let new_assistant = dbaccess::assistant::insert_assistant(&db, model)
         .await
@@ -29,7 +32,6 @@ pub async fn get_all_assistant(
     let db = state.db.read().await;
     dbaccess::assistant::select_all_assistant(&db)
         .await
-        .map(|v| v.into_iter().map(AssistantInfo::from).collect())
         .map_err(|e| e.to_string())
 }
 
@@ -49,7 +51,7 @@ pub async fn update_assistant_config(
     state: tauri::State<'_, AppState>,
     uuid: Uuid,
     para: serde_json::Value,
-    context_num: Option<u64>,
+    context_num: Option<i64>,
 ) -> Result<(), String> {
     let db = state.db.read().await;
     let _ = dbaccess::assistant::update_assistant_config(&db, uuid, para, context_num)

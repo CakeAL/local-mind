@@ -35,22 +35,25 @@ pub async fn generate_message(
     state: &tauri::State<'_, AppState>,
     db: &DbConn,
     assistant_uuid: Uuid,
-    context_num: u64,
+    context_num: i64,
     model: String,
     on_event: Channel<ChatResponseEvent>,
 ) -> Result<(), String> {
     // 取出最近 context_num 条消息（作为上下文消息）
-    let nearest_messages =
-        dbaccess::conversation::select_message_by_uuid(db, assistant_uuid, Some(context_num))
-            .await
-            .map_err(|e| e.to_string())?
-            .into_iter()
-            .map(|m| Message {
-                role: m.role.into(),
-                content: m.content,
-                images: None,
-            })
-            .collect::<Vec<Message>>();
+    let nearest_messages = dbaccess::conversation::select_message_by_uuid(
+        db,
+        assistant_uuid,
+        Some(context_num as u64),
+    )
+    .await
+    .map_err(|e| e.to_string())?
+    .into_iter()
+    .map(|m| Message {
+        role: m.role.into(),
+        content: m.content,
+        images: None,
+    })
+    .collect::<Vec<Message>>();
     // 取出该 assistant 配置信息
     let para_value = dbaccess::assistant::select_assistant_config(db, assistant_uuid)
         .await
@@ -114,6 +117,7 @@ pub async fn user_send_message(
     on_event: Channel<ChatResponseEvent>,
 ) -> Result<(), String> {
     let AssistantInfo {
+        id: _,
         uuid: assistant_uuid,
         name: _,
         model,
@@ -142,6 +146,7 @@ pub async fn regenerate_assistant_message(
     on_event: Channel<ChatResponseEvent>,
 ) -> Result<(), String> {
     let AssistantInfo {
+        id: _,
         uuid: assistant_uuid,
         name: _,
         model,

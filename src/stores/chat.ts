@@ -8,7 +8,8 @@ export const useChatStore = defineStore("chat", {
     } as ModelList,
   }),
   getters: {
-    getModelList: (state) => state.modelList,
+    getModels: (state) => state.modelList.models,
+    modelListIsEmpty: (state) => state.modelList.models.length === 0,
   },
   actions: {
     setModelList(modelList: ModelList) {

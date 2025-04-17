@@ -44,16 +44,20 @@ pub async fn insert_assistant(
 }
 
 /// 返回所有助手
-pub async fn select_all_assistant(db: &DbConn) -> Result<Vec<assistant::Model>, sea_orm::DbErr> {
+pub async fn select_all_assistant(
+    db: &DbConn,
+) -> Result<Vec<assistant::AssistantInfo>, sea_orm::DbErr> {
     let assistants = assistant::Entity::find()
         .select_only()
         .columns([
+            assistant::Column::Id,
             assistant::Column::Uuid,
             assistant::Column::Name,
             assistant::Column::Model,
             assistant::Column::ContextNum,
         ])
         .order_by_desc(assistant::Column::Id)
+        .into_model::<assistant::AssistantInfo>()
         .all(db)
         .await?;
     Ok(assistants)
@@ -82,7 +86,7 @@ pub async fn update_assistant_config(
     db: &DbConn,
     uuid: Uuid,
     para: serde_json::Value,
-    context_num: Option<u64>,
+    context_num: Option<i64>,
 ) -> Result<assistant::Model, sea_orm::DbErr> {
     let assistant = assistant::Entity::find()
         .filter(assistant::Column::Uuid.eq(uuid))
