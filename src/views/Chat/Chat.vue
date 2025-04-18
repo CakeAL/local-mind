@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useChatStore } from "@/stores/chat";
 import ChatContent from "./ChatContent.vue";
 import ChatSider from "./ChatSider.vue";
+const chatStore = useChatStore();
 </script>
 <template>
   <a-layout class="chat-view">
@@ -8,7 +10,7 @@ import ChatSider from "./ChatSider.vue";
       <ChatSider />
     </a-layout-sider>
     <a-layout-content class="chat-content">
-      <ChatContent />
+      <ChatContent :assistant="chatStore.getCurAssistant"/>
     </a-layout-content>
   </a-layout>
 </template>
@@ -26,6 +28,5 @@ import ChatSider from "./ChatSider.vue";
 
 .chat-content {
   height: 100%;
-  padding: 10px;
 }
 </style>

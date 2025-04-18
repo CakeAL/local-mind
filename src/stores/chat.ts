@@ -7,19 +7,19 @@ export const useChatStore = defineStore("chat", {
     modelList: {
       models: [],
     } as ModelList,
-    curAssistantUuid: "",
+    curAssistant: null as AssistantInfo | null,
   }),
   getters: {
     getModels: (state) => state.modelList.models,
     modelListIsEmpty: (state) => state.modelList.models.length === 0,
-    getCurAssistantUuid: (state) => state.curAssistantUuid,
+    getCurAssistant: (state) => state.curAssistant,
   },
   actions: {
     setModelList(modelList: ModelList) {
       this.modelList = modelList;
     },
     setCurAssistant(assistant: AssistantInfo) {
-      this.curAssistantUuid = assistant.uuid;
+      this.curAssistant = assistant;
     },
   },
 });

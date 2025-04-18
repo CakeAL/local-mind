@@ -14,7 +14,11 @@ const selectedModelName = ref<String>("");
 
 onMounted(() => {
   getModelList();
-  getAllAssistant();
+  getAllAssistant().then(() => {
+    if (assistants.value.length !== 0) {
+      chatStore.setCurAssistant(assistants.value[0]);
+    }
+  });
 });
 
 const getAllAssistant = async () => {
@@ -62,7 +66,7 @@ const selectThisAssistant = (assistant: AssistantInfo) => {
       :title="assistant.name"
       :showSettingIcon="true"
       :callback="() => selectThisAssistant(assistant)"
-      :selected="assistant.uuid === chatStore.curAssistantUuid"
+      :selected="assistant.uuid === chatStore.curAssistant?.uuid"
     />
     <a-divider style="margin: 0" v-if="assistants.length !== 0" />
     <SideItem
