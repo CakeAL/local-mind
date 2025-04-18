@@ -49,6 +49,10 @@ const newAssistant = async () => {
     assistants.value.push(res);
   }
 };
+
+const selectThisAssistant = (assistant: AssistantInfo) => {
+  chatStore.setCurAssistant(assistant);
+};
 </script>
 <template>
   <a-space direction="vertical" class="list">
@@ -57,6 +61,8 @@ const newAssistant = async () => {
       :key="index"
       :title="assistant.name"
       :showSettingIcon="true"
+      :callback="() => selectThisAssistant(assistant)"
+      :selected="assistant.uuid === chatStore.curAssistantUuid"
     />
     <a-divider style="margin: 0" v-if="assistants.length !== 0" />
     <SideItem

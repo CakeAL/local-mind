@@ -11,8 +11,8 @@ const {
   title: string;
   showSettingIcon?: boolean;
   selected?: boolean;
-  callback?: () => {};
-  buttonCallback?: () => {};
+  callback?: () => void;
+  buttonCallback?: () => void;
 }>();
 </script>
 <template>
@@ -44,12 +44,13 @@ const {
   border-radius: 50px;
   padding: 0 10px;
   border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
 }
 
 .selected, .side-item:hover {
   border: 1px solid var(--content-shadow);
   background-color: var(--content-select);
   cursor: pointer;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 </style>
