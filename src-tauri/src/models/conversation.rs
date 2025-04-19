@@ -18,26 +18,11 @@ pub struct Model {
     pub prompt_eval_count: i64,
     pub prompt_eval_duration: i64,
     pub eval_count: i64,
-    pub eval_druation: i64,
+    pub eval_duration: i64,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
-pub enum Relation {
-    #[sea_orm(
-        belongs_to = "super::assistant::Entity",
-        from = "Column::AssistantUuid",
-        to = "super::assistant::Column::Uuid",
-        on_update = "Cascade",
-        on_delete = "Restrict"
-    )]
-    Assistant,
-}
-
-impl Related<super::assistant::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Assistant.def()
-    }
-}
+pub enum Relation {}
 
 impl ActiveModelBehavior for ActiveModel {}
 

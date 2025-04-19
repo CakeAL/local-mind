@@ -10,15 +10,15 @@ use tokio_stream::StreamExt;
 use uuid::Uuid;
 
 use crate::{
-    dbaccess,
-    models::{app_state::AppState, assistant::AssistantInfo},
+    dbaccess::{self},
+    models::{app_state::AppState, assistant::AssistantInfo, conversation},
 };
 
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase", tag = "event", content = "data")]
 pub enum ChatResponseEvent {
     #[serde(rename_all = "camelCase")]
-    Started { user_message: serde_json::Value },
+    Started { user_message: conversation::Model },
     #[serde(rename_all = "camelCase")]
     Progress {
         model: String,
@@ -27,7 +27,7 @@ pub enum ChatResponseEvent {
     },
     #[serde(rename_all = "camelCase")]
     Finished {
-        assistant_message: serde_json::Value,
+        assistant_message: conversation::Model,
     },
 }
 
@@ -100,12 +100,12 @@ pub async fn generate_message(
             .map_err(|e| e.to_string())?;
             on_event
                 .send(ChatResponseEvent::Finished {
-                    assistant_message: serde_json::json!(assistant_message_model),
+                    assistant_message: assistant_message_model,
                 })
                 .map_err(|e| e.to_string())?;
             Ok(())
         }
-        None => Err("Generate Reply Failed due to Ollama inner Error.".into()),
+        None => Err("Generate Reply Failed due to Ollama inner Error. Please Retry.".into()),
     }
 }
 
@@ -131,7 +131,7 @@ pub async fn user_send_message(
             .map_err(|e| e.to_string())?;
     on_event
         .send(ChatResponseEvent::Started {
-            user_message: serde_json::json!(user_message_model),
+            user_message: user_message_model,
         })
         .map_err(|e| e.to_string())?;
     // 让大模型生成新的消息

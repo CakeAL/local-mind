@@ -40,6 +40,12 @@ pub async fn insert_user_message(
         created_at: Set(Utc::now()),
         content: Set(content),
         role: Set(conversation::RoleType::User),
+        total_duration: Set(0),
+        load_duration: Set(0),
+        prompt_eval_count: Set(0),
+        prompt_eval_duration: Set(0),
+        eval_count: Set(0),
+        eval_duration: Set(0),
         ..Default::default()
     };
     let new_message = new_message.insert(db).await?;
@@ -77,7 +83,7 @@ pub async fn insert_assistant_message(
         prompt_eval_count: Set(prompt_eval_count.unwrap_or_default()),
         prompt_eval_duration: Set(prompt_eval_duration.unwrap_or_default()),
         eval_count: Set(eval_count.unwrap_or_default()),
-        eval_druation: Set(eval_duration.unwrap_or_default()),
+        eval_duration: Set(eval_duration.unwrap_or_default()),
         ..Default::default()
     };
     let new_message = new_message.insert(db).await?;

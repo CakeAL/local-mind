@@ -33,7 +33,7 @@ pub fn run() {
             assistant::delete_assistant,
             conversation::user_send_message,
             conversation::regenerate_assistant_message,
-            conversation::delete_message
+            conversation::delete_message,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
