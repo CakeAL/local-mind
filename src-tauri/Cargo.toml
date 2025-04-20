@@ -15,7 +15,7 @@ name = "local_mind_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = ["codegen"] }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
 anyhow = "1"
@@ -25,7 +25,9 @@ reqwest = { version = "0.12", features = ["stream"] }
 sea-orm = { version = "1.1", features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros", "with-uuid", "with-chrono"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri = { version = "2", features = [] }
+# 2.5.0 有 Channel 问题
+tauri = { version = "=2.4.0", features = [] }
+tauri-runtime = "=2.5.0"
 tauri-plugin-decorum = { git = "https://github.com/CakeAL/tauri-plugin-decorum" }
 tauri-plugin-shell = "2.2.1"
 tokio = { version = "1", features = ["full"] }
