@@ -56,7 +56,7 @@ pub async fn select_all_assistant(
             assistant::Column::Model,
             assistant::Column::ContextNum,
         ])
-        .order_by_desc(assistant::Column::Id)
+        .order_by_asc(assistant::Column::Id)
         .into_model::<assistant::AssistantInfo>()
         .all(db)
         .await?;

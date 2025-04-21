@@ -8,6 +8,7 @@
     "new-assistant": "+ New Assistant",
     "select-model": "Select an ollama model",
     "no-models": "There is no model, please install ollama first and pull any model.",
-    "input-placeholder": "Input messages here..."
+    "input-placeholder": "Input messages here...",
+    "user": "User"
   }
 }

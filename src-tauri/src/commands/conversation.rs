@@ -160,6 +160,17 @@ pub async fn regenerate_assistant_message(
 }
 
 #[tauri::command]
+pub async fn get_assistant_conversation(
+    state: tauri::State<'_, AppState>,
+    assistant_uuid: Uuid,
+) -> Result<Vec<conversation::Model>, String> {
+    let db = state.db.read().await;
+    dbaccess::conversation::select_message_by_uuid(&db, assistant_uuid, None)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub async fn delete_message(
     state: tauri::State<'_, AppState>,
     message_id: i64,

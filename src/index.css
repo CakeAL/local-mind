@@ -23,3 +23,41 @@ button.decorum-tb-btn {
   height: 101%;
   display: inline-block;
 }
+
+/* 自定义滚动条 */
+div::-webkit-scrollbar {
+  width: 2px; /* 设置滚动条宽度 */
+  height: 2px; /* 如果需要水平滚动条，也可以设置高度 */
+}
+
+/* 自定义滚动条的“滑块”部分 */
+div::-webkit-scrollbar-thumb {
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.2
+  ); /* 设置滑块颜色为半透明黑色 */
+  border-radius: 4px; /* 设置滑块边角圆润 */
+}
+
+/* 自定义滚动条轨道 */
+div::-webkit-scrollbar-track {
+  background-color: rgba(
+    240,
+    240,
+    240,
+    0.3
+  ); /* 设置轨道颜色为浅灰色半透明 */
+  border-radius: 4px; /* 轨道边角圆润 */
+}
+
+/* 可选：当滚动条被悬停时 */
+div::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4); /* 鼠标悬停时加深滑块颜色 */
+}
+
+h4 {
+  margin-block-start: 0;
+  margin-block-end: 4px !important;
+}

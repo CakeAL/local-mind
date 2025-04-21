@@ -10,7 +10,7 @@ const chatStore = useChatStore();
       <ChatSider />
     </a-layout-sider>
     <a-layout-content class="chat-content">
-      <ChatContent :assistant="chatStore.getCurAssistant"/>
+      <ChatContent :assistant="chatStore.getCurAssistant" />
     </a-layout-content>
   </a-layout>
 </template>

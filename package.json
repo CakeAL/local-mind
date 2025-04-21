@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/jsconfig",
   "name": "local-mind",
   "private": true,
   "version": "0.1.0",
