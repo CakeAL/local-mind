@@ -5,12 +5,17 @@ import { Message, newAssistantMessage } from "@/models/conversation";
 import { toFormatDateString } from "@/util";
 import {
   CaretUpOutlined,
+  CopyOutlined,
+  DeleteOutlined,
+  RetweetOutlined,
   RobotOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
 import { Channel, invoke } from "@tauri-apps/api/core";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { message } from "ant-design-vue";
 import { computed, h, nextTick, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 type ChatResponseEvent =
   | {
@@ -44,6 +49,7 @@ const sendButtonDisabled = computed(() => {
 });
 const sendButtonLoading = ref<boolean>(false);
 const conversation = ref<Message[]>([]);
+const { t } = useI18n();
 
 const getCurAssistantConversation = async () => {
   if (assistant !== null) {
@@ -61,9 +67,8 @@ watch(() => assistant?.uuid, () => {
   getCurAssistantConversation().then(() => handleScrollBottom());
 }, { immediate: true });
 
-const userSendMessage = async () => {
+const newOnEvent = (): Channel<ChatResponseEvent> => {
   let onEvent = new Channel<ChatResponseEvent>();
-
   onEvent.onmessage = (message) => {
     switch (message.event) {
       case "started": {
@@ -96,7 +101,11 @@ const userSendMessage = async () => {
       }
     }
   };
+  return onEvent;
+};
 
+const userSendMessage = async () => {
+  let onEvent = newOnEvent();
   if (userInput.value.trim() === "" || assistant === null) {
     return;
   }
@@ -110,6 +119,44 @@ const userSendMessage = async () => {
     message.warning(err);
     sendButtonLoading.value = false;
   });
+};
+
+const copyToClipboard = async (content: string) => {
+  console.log(22222);
+
+  await writeText(content);
+  message.success(t("copied"));
+};
+
+const removeMessageById = (messageId: number) => {
+  conversation.value = conversation.value.filter(message =>
+    message.id !== messageId
+  );
+};
+
+const regenerateAssistantMessage = async (messageId: number) => {
+  conversation.value[conversation.value.length - 1].content = "";
+  let onEvent = newOnEvent();
+  // 设置按钮等待
+  sendButtonLoading.value = true;
+  await invoke("regenerate_assistant_message", {
+    assistantInfo: assistant,
+    messageId: messageId,
+    onEvent,
+  }).catch((err) => {
+    message.warning(err);
+    sendButtonLoading.value = false;
+  });
+};
+
+const deleteMessage = async (messageId: number) => {
+  await invoke("delete_message", {
+    assistantInfo: assistant,
+    messageId,
+  }).catch((err) => {
+    message.warning(err);
+  });
+  removeMessageById(messageId);
 };
 
 // 滚动
@@ -152,6 +199,7 @@ const handleScrollBottom = () => {
             <a-list-item class="chat-list-item">
               <a-list-item-meta
                 :description="toFormatDateString(item.created_at)"
+                style="margin-block-end: 0"
               >
                 <template #title v-if="item.role === 'User'">
                   {{ $t("chat.user") }}
@@ -175,6 +223,71 @@ const handleScrollBottom = () => {
                 </template>
               </a-list-item-meta>
               <MarkdownRender :content="item.content" />
+              <template
+                #actions
+                class="item-actions"
+              >
+                <a-flex
+                  justify="space-between"
+                  align="center"
+                  style="width: 100%"
+                >
+                  <div>
+                    <a-button
+                      size="small"
+                      class="action-button"
+                      @click="copyToClipboard(item.content)"
+                    >
+                      <template #icon>
+                        <CopyOutlined />
+                      </template>
+                    </a-button>
+                    <a-popconfirm
+                      :title="t('chat.regenerate-message')"
+                      ok-text="Yes"
+                      cancel-text="No"
+                      @confirm="
+                        regenerateAssistantMessage(
+                          item.id,
+                        )
+                      "
+                      v-if="item.role === 'Assistant'"
+                    >
+                      <a-button
+                        size="small"
+                        class="action-button"
+                      >
+                        <template #icon>
+                          <RetweetOutlined />
+                        </template>
+                      </a-button>
+                    </a-popconfirm>
+                    <a-popconfirm
+                      :title="t('chat.delete-message')"
+                      ok-text="Yes"
+                      cancel-text="No"
+                      @confirm="
+                        deleteMessage(
+                          item.id,
+                        )
+                      "
+                    >
+                      <a-button size="small" class="action-button">
+                        <template #icon>
+                          <DeleteOutlined />
+                        </template>
+                      </a-button>
+                    </a-popconfirm>
+                  </div>
+                  <div v-if="item.role === 'Assistant'">
+                    {{
+                      (item.eval_count
+                      / item.eval_duration * 1e9)
+                      .toFixed(2)
+                    }} Tokens/s
+                  </div>
+                </a-flex>
+              </template>
             </a-list-item>
           </template>
         </a-list>
@@ -242,5 +355,10 @@ const handleScrollBottom = () => {
 
 .chat-list-item {
   padding: 6px 12px 6px 0;
+}
+
+.action-button {
+  margin-right: 10px;
+  color: rgba(127, 127, 127, 0.6);
 }
 </style>

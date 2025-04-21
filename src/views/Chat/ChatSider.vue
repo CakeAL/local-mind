@@ -51,6 +51,7 @@ const newAssistant = async () => {
   );
   if (res.uuid) {
     assistants.value.push(res);
+    chatStore.setCurAssistant(res);
   }
 };
 

@@ -9,6 +9,9 @@
     "select-model": "请选择一个 Ollama 模型",
     "no-models": "并未获取到任何可用模型，请先在 Ollama 中拉取任一可用模型。",
     "input-placeholder": "在此处输入消息...",
-    "user": "用户"
-  }
+    "user": "用户",
+    "regenerate-message": "确定要重新生成吗？会删除此消息。",
+    "delete-message": "确定要删除此消息吗？"
+  },
+  "copied": "已复制"
 }

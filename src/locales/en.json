@@ -9,6 +9,9 @@
     "select-model": "Select an ollama model",
     "no-models": "There is no model, please install ollama first and pull any model.",
     "input-placeholder": "Input messages here...",
-    "user": "User"
-  }
+    "user": "User",
+    "regenerate-message": "Are you sure you want to regenerate this message? It will delete this message.",
+    "delete-message": "Are you sure you want to delete this message?"
+  },
+  "copied": "Copied"
 }

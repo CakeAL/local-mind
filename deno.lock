@@ -7,6 +7,7 @@
     "npm:@rsbuild/plugin-vue@1.0.7": "1.0.7_@rsbuild+core@1.2.19__@swc+helpers@0.5.15_webpack@5.98.0",
     "npm:@tauri-apps/api@2": "2.5.0",
     "npm:@tauri-apps/cli@2": "2.4.0",
+    "npm:@tauri-apps/plugin-clipboard-manager@^2.2.2": "2.2.2",
     "npm:@tauri-apps/plugin-shell@^2.2.1": "2.2.1",
     "npm:@types/markdown-it@^14.1.2": "14.1.2",
     "npm:ant-design-vue@^4.2.6": "4.2.6_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
@@ -348,6 +349,12 @@
         "@tauri-apps/cli-win32-x64-msvc"
       ]
     },
+    "@tauri-apps/plugin-clipboard-manager@2.2.2": {
+      "integrity": "sha512-bZvDLMqfcNmsw7Ag8I49jlaCjdpDvvlJHnpp6P+Gg/3xtpSERdwlDxm7cKGbs2mj46dsw4AuG3RoAgcpwgioUA==",
+      "dependencies": [
+        "@tauri-apps/api"
+      ]
+    },
     "@tauri-apps/plugin-shell@2.2.1": {
       "integrity": "sha512-G1GFYyWe/KlCsymuLiNImUgC8zGY0tI0Y3p8JgBCWduR5IEXlIJS+JuG1qtveitwYXlfJrsExt3enhv5l2/yhA==",
       "dependencies": [
@@ -481,6 +488,14 @@
       ]
     },
     "@vue/server-renderer@3.5.13_vue@3.5.13__typescript@5.8.2": {
+      "integrity": "sha512-wAi4IRJV/2SAW3htkTlB+dHeRmpTiVIK1OGLWV1yeStVSebSQQOwGwIq0D3ZIoBj2C2qpgz5+vX9iEBkTdk5YA==",
+      "dependencies": [
+        "@vue/compiler-ssr",
+        "@vue/shared",
+        "vue"
+      ]
+    },
+    "@vue/server-renderer@3.5.13_vue@3.5.13__typescript@5.8.2_typescript@5.8.2": {
       "integrity": "sha512-wAi4IRJV/2SAW3htkTlB+dHeRmpTiVIK1OGLWV1yeStVSebSQQOwGwIq0D3ZIoBj2C2qpgz5+vX9iEBkTdk5YA==",
       "dependencies": [
         "@vue/compiler-ssr",
@@ -1642,7 +1657,7 @@
         "@vue/compiler-dom",
         "@vue/compiler-sfc",
         "@vue/runtime-dom",
-        "@vue/server-renderer",
+        "@vue/server-renderer@3.5.13_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
         "@vue/shared",
         "typescript"
       ]
@@ -1704,6 +1719,7 @@
         "npm:@rsbuild/plugin-vue@1.0.7",
         "npm:@tauri-apps/api@2",
         "npm:@tauri-apps/cli@2",
+        "npm:@tauri-apps/plugin-clipboard-manager@^2.2.2",
         "npm:@tauri-apps/plugin-shell@^2.2.1",
         "npm:@types/markdown-it@^14.1.2",
         "npm:ant-design-vue@^4.2.6",

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@tauri-apps/plugin-clipboard-manager": "^2.2.2",
     "@types/markdown-it": "^14.1.2",
     "ant-design-vue": "^4.2.6",
     "highlight.js": "^11.11.1",
