@@ -90,14 +90,16 @@ pub async fn insert_assistant_message(
     Ok(new_message)
 }
 
-/// 查找某 assistant 的全部(最近 context_num)对话
+/// 从 message_id 之前查找某 assistant 的全部(最近 context_num)对话
 pub async fn select_message_by_uuid(
     db: &DbConn,
     assistant_uuid: Uuid,
     context_num: Option<u64>,
+    message_id: Option<i64>,
 ) -> Result<Vec<conversation::Model>, sea_orm::DbErr> {
     let messages = conversation::Entity::find()
         .filter(conversation::Column::AssistantUuid.eq(assistant_uuid))
+        .filter(conversation::Column::Id.lte(message_id.unwrap_or(i64::MAX)))
         .order_by_desc(conversation::Column::CreatedAt) // 按创建时间倒序排序
         .limit(context_num) // 限制返回的记录数
         .all(db) // 获取所有匹配的记录

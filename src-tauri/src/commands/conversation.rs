@@ -38,12 +38,14 @@ pub async fn generate_message(
     context_num: i64,
     model: String,
     on_event: Channel<ChatResponseEvent>,
+    message_id: Option<i64>,
 ) -> Result<(), String> {
-    // 取出最近 context_num 条消息（作为上下文消息）
+    // 取出 message_id 之前（含）最近 context_num 条消息（作为上下文消息）
     let nearest_messages = dbaccess::conversation::select_message_by_uuid(
         db,
         assistant_uuid,
         Some(context_num as u64),
+        message_id,
     )
     .await
     .map_err(|e| e.to_string())?
@@ -135,7 +137,16 @@ pub async fn user_send_message(
         })
         .map_err(|e| e.to_string())?;
     // 让大模型生成新的消息
-    generate_message(&state, &db, assistant_uuid, context_num, model, on_event).await
+    generate_message(
+        &state,
+        &db,
+        assistant_uuid,
+        context_num,
+        model,
+        on_event,
+        None,
+    )
+    .await
 }
 
 #[tauri::command]
@@ -155,8 +166,17 @@ pub async fn regenerate_assistant_message(
     let db = state.db.read().await;
     // 删除当前消息
     delete_message(state.clone(), message_id).await?;
-    // 让大模型生成新的消息
-    generate_message(&state, &db, assistant_uuid, context_num, model, on_event).await
+    // 让大模型生成新的消息，这里应该根据 message_id 之前的消息来生成消息
+    generate_message(
+        &state,
+        &db,
+        assistant_uuid,
+        context_num,
+        model,
+        on_event,
+        Some(message_id),
+    )
+    .await
 }
 
 #[tauri::command]
@@ -165,7 +185,7 @@ pub async fn get_assistant_conversation(
     assistant_uuid: Uuid,
 ) -> Result<Vec<conversation::Model>, String> {
     let db = state.db.read().await;
-    dbaccess::conversation::select_message_by_uuid(&db, assistant_uuid, None)
+    dbaccess::conversation::select_message_by_uuid(&db, assistant_uuid, None, None)
         .await
         .map_err(|e| e.to_string())
 }
