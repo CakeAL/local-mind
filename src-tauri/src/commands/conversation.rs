@@ -91,14 +91,25 @@ pub async fn generate_message(
     }
     // 如果 final_res 为 None，说明 Ollama 没有成功生成完整的对话
     match final_res {
-        Some(res) => {
-            let assistant_message_model = dbaccess::conversation::insert_assistant_message(
-                db,
-                assistant_uuid,
-                res,
-                final_content,
-            )
-            .await
+        Some(chat_response) => {
+            let assistant_message_model = if let Some(message_id) = message_id {
+                // 说明是 Regenerate
+                dbaccess::conversation::update_assistant_message(
+                    db,
+                    message_id,
+                    chat_response,
+                    final_content,
+                )
+                .await
+            } else {
+                dbaccess::conversation::insert_assistant_message(
+                    db,
+                    assistant_uuid,
+                    chat_response,
+                    final_content,
+                )
+                .await
+            }
             .map_err(|e| e.to_string())?;
             on_event
                 .send(ChatResponseEvent::Finished {
@@ -164,8 +175,6 @@ pub async fn regenerate_assistant_message(
         context_num,
     } = assistant_info;
     let db = state.db.read().await;
-    // 删除当前消息
-    delete_message(state.clone(), message_id).await?;
     // 让大模型生成新的消息，这里应该根据 message_id 之前的消息来生成消息
     generate_message(
         &state,

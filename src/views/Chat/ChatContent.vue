@@ -67,7 +67,7 @@ watch(() => assistant?.uuid, () => {
   getCurAssistantConversation().then(() => handleScrollBottom());
 }, { immediate: true });
 
-const newOnEvent = (): Channel<ChatResponseEvent> => {
+const newOnEvent = (messageIndex: number): Channel<ChatResponseEvent> => {
   let onEvent = new Channel<ChatResponseEvent>();
   onEvent.onmessage = (message) => {
     switch (message.event) {
@@ -82,17 +82,24 @@ const newOnEvent = (): Channel<ChatResponseEvent> => {
         break;
       }
       case "progress": {
-        // [TODO]
         const { content } = message.data;
-        conversation.value[conversation.value.length - 1].content += content;
-        handleScrollBottom();
+        if (messageIndex !== -1) {
+          conversation.value[messageIndex].content += content;
+        } else {
+          conversation.value[conversation.value.length - 1].content += content;
+          handleScrollBottom();
+        }
         break;
       }
       case "finished": {
         const { assistantMessage } = message.data;
-        conversation.value[conversation.value.length - 1] = assistantMessage;
+        if (messageIndex !== -1) {
+          conversation.value[messageIndex] = assistantMessage;
+        } else {
+          conversation.value[conversation.value.length - 1] = assistantMessage;
+          handleScrollBottom();
+        }
         sendButtonLoading.value = false;
-        handleScrollBottom();
         break;
       }
       default: {
@@ -105,7 +112,7 @@ const newOnEvent = (): Channel<ChatResponseEvent> => {
 };
 
 const userSendMessage = async () => {
-  let onEvent = newOnEvent();
+  let onEvent = newOnEvent(-1);
   if (userInput.value.trim() === "" || assistant === null) {
     return;
   }
@@ -134,9 +141,20 @@ const removeMessageById = (messageId: number) => {
   );
 };
 
-const regenerateAssistantMessage = async (messageId: number) => {
-  conversation.value[conversation.value.length - 1].content = "";
-  let onEvent = newOnEvent();
+const regenerateAssistantMessage = async (
+  messageId: number,
+  messageIndex: number,
+) => {
+  // // 如果点击的消息是用户消息，则需要重新生成在下一个地方
+  // if (conversation.value[messageIndex].role == "User") {
+  //   messageIndex += 1;
+  //   if (messageIndex >= conversation.value.length) {
+  //     // 如果没有下一个地方了需要新插入一个
+  //     conversation.value.splice(newAssistantMessage(assistant!));
+  //   }
+  // }
+  conversation.value[messageIndex].content = "";
+  let onEvent = newOnEvent(messageIndex);
   // 设置按钮等待
   sendButtonLoading.value = true;
   await invoke("regenerate_assistant_message", {
@@ -195,7 +213,7 @@ const handleScrollBottom = () => {
           item-layout="vertical"
           :data-source="conversation"
         >
-          <template #renderItem="{ item }">
+          <template #renderItem="{ item, index }">
             <a-list-item class="chat-list-item">
               <a-list-item-meta
                 :description="toFormatDateString(item.created_at)"
@@ -249,6 +267,7 @@ const handleScrollBottom = () => {
                       @confirm="
                         regenerateAssistantMessage(
                           item.id,
+                          index,
                         )
                       "
                       v-if="item.role === 'Assistant'"

@@ -90,6 +90,29 @@ pub async fn insert_assistant_message(
     Ok(new_message)
 }
 
+// 更新模型回复的消息
+pub async fn update_assistant_message(
+    db: &DbConn,
+    message_id: i64,
+    chat_response: ChatResponse,
+    content: String,
+) -> Result<conversation::Model, sea_orm::DbErr> {
+    let message = conversation::Entity::find_by_id(message_id)
+        .one(db)
+        .await?
+        .ok_or(sea_orm::DbErr::RecordNotFound("No Such Message".into()))?;
+    let mut message: conversation::ActiveModel = message.into();
+    message.content = Set(content);
+    message.created_at = Set(chat_response.created_at);
+    message.total_duration = Set(chat_response.total_duration.unwrap_or_default());
+    message.load_duration = Set(chat_response.load_duration.unwrap_or_default());
+    message.prompt_eval_count = Set(chat_response.prompt_eval_count.unwrap_or_default());
+    message.prompt_eval_duration = Set(chat_response.prompt_eval_duration.unwrap_or_default());
+    message.eval_count = Set(chat_response.eval_count.unwrap_or_default());
+    message.eval_duration = Set(chat_response.eval_duration.unwrap_or_default());
+    let updated_message = message.update(db).await?;
+    Ok(updated_message)
+}
 /// 从 message_id 之前查找某 assistant 的全部(最近 context_num)对话
 pub async fn select_message_by_uuid(
     db: &DbConn,
@@ -100,7 +123,7 @@ pub async fn select_message_by_uuid(
     let messages = conversation::Entity::find()
         .filter(conversation::Column::AssistantUuid.eq(assistant_uuid))
         .filter(conversation::Column::Id.lte(message_id.unwrap_or(i64::MAX)))
-        .order_by_desc(conversation::Column::CreatedAt) // 按创建时间倒序排序
+        .order_by_desc(conversation::Column::Id) // 按照 Id 降序
         .limit(context_num) // 限制返回的记录数
         .all(db) // 获取所有匹配的记录
         .await?;
