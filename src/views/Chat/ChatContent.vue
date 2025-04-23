@@ -3,6 +3,7 @@ import MarkdownRender from "@/components/MarkdownRender.vue";
 import { AssistantInfo } from "@/models/assistant";
 import { Message, newAssistantMessage } from "@/models/conversation";
 import { toFormatDateString } from "@/util";
+import { copyToClipboard } from "@/util";
 import {
   CaretUpOutlined,
   CopyOutlined,
@@ -12,10 +13,8 @@ import {
   UserOutlined,
 } from "@ant-design/icons-vue";
 import { Channel, invoke } from "@tauri-apps/api/core";
-import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { message } from "ant-design-vue";
 import { computed, h, nextTick, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
 
 type ChatResponseEvent =
   | {
@@ -49,7 +48,6 @@ const sendButtonDisabled = computed(() => {
 });
 const sendButtonLoading = ref<boolean>(false);
 const conversation = ref<Message[]>([]);
-const { t } = useI18n();
 
 const getCurAssistantConversation = async () => {
   if (assistant !== null) {
@@ -126,13 +124,6 @@ const userSendMessage = async () => {
     message.warning(err);
     sendButtonLoading.value = false;
   });
-};
-
-const copyToClipboard = async (content: string) => {
-  console.log(22222);
-
-  await writeText(content);
-  message.success(t("copied"));
 };
 
 const removeMessageById = (messageId: number) => {
@@ -261,7 +252,7 @@ const handleScrollBottom = () => {
                       </template>
                     </a-button>
                     <a-popconfirm
-                      :title="t('chat.regenerate-message')"
+                      :title="$t('chat.regenerate-message')"
                       ok-text="Yes"
                       cancel-text="No"
                       @confirm="
@@ -282,7 +273,7 @@ const handleScrollBottom = () => {
                       </a-button>
                     </a-popconfirm>
                     <a-popconfirm
-                      :title="t('chat.delete-message')"
+                      :title="$t('chat.delete-message')"
                       ok-text="Yes"
                       cancel-text="No"
                       @confirm="

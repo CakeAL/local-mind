@@ -13,5 +13,7 @@
     "regenerate-message": "Are you sure you want to regenerate this message? It will delete this message.",
     "delete-message": "Are you sure you want to delete this message?"
   },
-  "copied": "Copied"
+  "copied": "Copied",
+  "thinking": "Thinking...",
+  "thought": "Thought"
 }

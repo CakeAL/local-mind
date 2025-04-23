@@ -1,3 +1,7 @@
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { message } from "ant-design-vue";
+import { i18n } from "./plugins/i18n";
+
 export function toFormatDateString(createdAt: Date) {
   let date = new Date(createdAt);
   const options: Intl.DateTimeFormatOptions = {
@@ -9,3 +13,8 @@ export function toFormatDateString(createdAt: Date) {
   };
   return date.toLocaleString("en-US", options).replace(",", "");
 }
+
+export const copyToClipboard = async (content: string) => {
+  await writeText(content);
+  message.success(i18n.global.t("copied"));
+};

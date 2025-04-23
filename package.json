@@ -17,6 +17,7 @@
     "ant-design-vue": "^4.2.6",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
+    "parse-reasoning": "^1.0.5",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "vue": "^3.3.4",
