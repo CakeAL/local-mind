@@ -1,8 +1,5 @@
 use chrono::{DateTime, Utc};
-use ollama_rust_api::model::{
-    chat::{ChatRequestParameters, Message},
-    parameter::Parameter,
-};
+use ollama_rust_api::model::chat::{ChatRequestParameters, Message};
 use sea_orm::DbConn;
 use serde::Serialize;
 use tauri::ipc::Channel;
@@ -60,14 +57,13 @@ pub async fn generate_message(
     let para_value = dbaccess::assistant::select_assistant_config(db, assistant_uuid)
         .await
         .map_err(|e| e.to_string())?;
-    let para = serde_json::from_value::<Parameter>(para_value).map_err(|e| e.to_string())?;
     // 向 Ollama 发送消息
     let ollama = state.ollama.read().await;
     let mut chat_stream = ollama
         .chat(&ChatRequestParameters {
             model,
             messages: nearest_messages,
-            options: Some(para),
+            options: Some(para_value),
         })
         .await
         .map_err(|e| e.to_string())?;

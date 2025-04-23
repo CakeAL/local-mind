@@ -35,7 +35,11 @@ pub async fn insert_assistant(
         name: Set("Default Assistant".to_string()),
         model: Set(model),
         uuid: Set(Uuid::new_v4()),
-        parameter: Set(serde_json::json!(Parameter::default())),
+        parameter: Set(serde_json::json!(Parameter {
+            temperature: Some(1.0),
+            top_p: Some(1.0),
+            ..Default::default()
+        })),
         context_num: Set(5),
         ..Default::default()
     };
@@ -64,28 +68,26 @@ pub async fn select_all_assistant(
 }
 
 /// 返回某个助手的配置
-pub async fn select_assistant_config(
-    db: &DbConn,
-    uuid: Uuid,
-) -> Result<serde_json::Value, sea_orm::DbErr> {
+pub async fn select_assistant_config(db: &DbConn, uuid: Uuid) -> Result<Parameter, sea_orm::DbErr> {
     let v = assistant::Entity::find()
         .filter(assistant::Column::Uuid.eq(uuid))
         .select_only()
-        .columns([assistant::Column::Parameter, assistant::Column::ContextNum])
+        .columns([assistant::Column::Parameter])
         .into_json()
         .one(db)
         .await?
         .ok_or(sea_orm::DbErr::RecordNotFound(
             "No such uuid to assistant".into(),
         ))?;
-    Ok(v)
+    Ok(serde_json::from_value(v).unwrap_or_default())
 }
 
 /// 更新某个助手的配置
 pub async fn update_assistant_config(
     db: &DbConn,
     uuid: Uuid,
-    para: serde_json::Value,
+    name: String,
+    para: Parameter,
     context_num: Option<i64>,
 ) -> Result<assistant::Model, sea_orm::DbErr> {
     let assistant = assistant::Entity::find()
@@ -96,7 +98,8 @@ pub async fn update_assistant_config(
             "No such uuid to assistant".into(),
         ))?;
     let mut assistant: assistant::ActiveModel = assistant.into();
-    assistant.parameter = Set(para);
+    assistant.parameter = Set(serde_json::json!(para));
+    assistant.name = Set(name);
     if let Some(context_num) = context_num {
         assistant.context_num = Set(context_num);
     }

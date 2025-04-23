@@ -11,7 +11,14 @@
     "input-placeholder": "Input messages here...",
     "user": "User",
     "regenerate-message": "Are you sure you want to regenerate this message? It will delete this message.",
-    "delete-message": "Are you sure you want to delete this message?"
+    "delete-message": "Are you sure you want to delete this message?",
+    "assistant-config": "Assistant Config",
+    "model": "Model",
+    "assistant-name": "Assistant Name",
+    "temperature": "Model Temperature",
+    "context-number": "Context Number",
+    "delete-cur-assistant": "Delete Current Assistant",
+    "delete-assistant-message": "Are you sure you want to delete this assistant?"
   },
   "copied": "Copied",
   "thinking": "Thinking...",

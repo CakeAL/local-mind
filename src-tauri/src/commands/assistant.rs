@@ -1,4 +1,4 @@
-use ollama_rust_api::model::models::ModelList;
+use ollama_rust_api::model::{models::ModelList, parameter::Parameter};
 use uuid::Uuid;
 
 use crate::{
@@ -39,7 +39,7 @@ pub async fn get_all_assistant(
 pub async fn get_assistant_config(
     state: tauri::State<'_, AppState>,
     uuid: Uuid,
-) -> Result<serde_json::Value, String> {
+) -> Result<Parameter, String> {
     let db = state.db.read().await;
     dbaccess::assistant::select_assistant_config(&db, uuid)
         .await
@@ -50,11 +50,12 @@ pub async fn get_assistant_config(
 pub async fn update_assistant_config(
     state: tauri::State<'_, AppState>,
     uuid: Uuid,
-    para: serde_json::Value,
+    name: String,
+    para: Parameter,
     context_num: Option<i64>,
 ) -> Result<(), String> {
     let db = state.db.read().await;
-    let _ = dbaccess::assistant::update_assistant_config(&db, uuid, para, context_num)
+    let _ = dbaccess::assistant::update_assistant_config(&db, uuid, name, para, context_num)
         .await
         .map_err(|e| e.to_string())?;
     Ok(())

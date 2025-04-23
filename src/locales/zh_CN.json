@@ -11,7 +11,14 @@
     "input-placeholder": "在此处输入消息...",
     "user": "用户",
     "regenerate-message": "确定要重新生成吗？会删除此消息。",
-    "delete-message": "确定要删除此消息吗？"
+    "delete-message": "确定要删除此消息吗？",
+    "assistant-config": "助手配置",
+    "model": "模型",
+    "assistant-name": "助手名称",
+    "temperature": "模型温度",
+    "context-number": "上下文长度",
+    "delete-cur-assistant": "删除当前助手",
+    "delete-assistant-message": "确定删除当前助手吗？"
   },
   "copied": "已复制",
   "thinking": "思考中...",

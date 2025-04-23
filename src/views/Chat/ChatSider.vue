@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import SideItem from "@/components/SideItem.vue";
-import { AssistantInfo } from "@/models/assistant";
+import { AssistantInfo, AssistantParameter } from "@/models/assistant";
 import { ModelList } from "@/models/model";
 import { useChatStore } from "@/stores/chat";
 import { invoke } from "@tauri-apps/api/core";
 import { message } from "ant-design-vue";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const assistants = ref<AssistantInfo[]>([]);
 const openModal = ref(false);
@@ -58,6 +58,82 @@ const newAssistant = async () => {
 const selectThisAssistant = (assistant: AssistantInfo) => {
   chatStore.setCurAssistant(assistant);
 };
+
+const assistantConfigModal = ref<boolean>(false);
+const assistantParameter = ref<AssistantParameter | null>(null);
+const openAssistantConfigModal = async (assistant: AssistantInfo) => {
+  assistantParameter.value = null;
+  assistantParameter.value = await invoke<AssistantParameter>(
+    "get_assistant_config",
+    {
+      uuid: assistant.uuid,
+    },
+  ).catch((err) => message.warning(err));
+  newAssistantName.value = assistant.name;
+  assistantConfigModal.value = true;
+};
+const newAssistantName = ref<string>("");
+const setNewAssistantConfig = async () => {
+  await invoke("update_assistant_config", {
+    uuid: chatStore.getCurAssistant?.uuid,
+    name: newAssistantName.value,
+    para: assistantParameter.value,
+    contextNum: chatStore.getCurAssistant?.contextNum,
+  }).catch((err) => message.warning(err));
+  getAllAssistant(); // 更新信息
+  assistantConfigModal.value = false; // 关闭配置窗口
+};
+
+const deleteCurAssistant = async () => {
+  await invoke("delete_assistant", {
+    uuid: chatStore.getCurAssistant?.uuid,
+  }).catch((err) => message.warning(err));
+  assistants.value = assistants.value.filter(
+    (assistant) => assistant.uuid !== chatStore.getCurAssistant?.uuid,
+  ); // 过滤掉已经删除掉助手
+  chatStore.setCurAssistant(assistants.value[0]);
+  assistantConfigModal.value = false; // 关闭配置窗口
+};
+
+const assistantTemperature = computed({
+  get: () => assistantParameter.value?.temperature ?? 1.0,
+  set: (value) => {
+    if (assistantParameter.value) {
+      assistantParameter.value.temperature = value;
+    }
+  },
+});
+const assistantTopP = computed({
+  get: () => assistantParameter.value?.top_p ?? 1.0,
+  set: (value) => {
+    if (assistantParameter.value) {
+      assistantParameter.value.top_p = value;
+    }
+  },
+});
+const assistantContextNumber = computed({
+  get: () => chatStore.getCurAssistant?.contextNum ?? 5,
+  set: (value) => {
+    if (chatStore.getCurAssistant) {
+      chatStore.getCurAssistant.contextNum = value;
+    }
+  },
+});
+const tempMarks = ref<Record<number, any>>({
+  0.0: "0.0",
+  0.7: "0.7",
+  1.0: "1.0",
+});
+const topPMarks = ref<Record<number, any>>({
+  0.0: "0.0",
+  1.0: "1.0",
+  2.0: "2.0",
+});
+const contextMarks = ref<Record<number, any>>({
+  0: "0",
+  5: "5",
+  10: "10",
+});
 </script>
 <template>
   <a-space direction="vertical" class="list">
@@ -68,6 +144,7 @@ const selectThisAssistant = (assistant: AssistantInfo) => {
       :showSettingIcon="true"
       :callback="() => selectThisAssistant(assistant)"
       :selected="assistant.uuid === chatStore.curAssistant?.uuid"
+      :buttonCallback="() => openAssistantConfigModal(chatStore.curAssistant!)"
     />
     <a-divider style="margin: 0" v-if="assistants.length !== 0" />
     <SideItem
@@ -97,6 +174,108 @@ const selectThisAssistant = (assistant: AssistantInfo) => {
       >{{ model.name }}</a-radio-button>
     </a-radio-group>
   </a-modal>
+  <a-modal
+    v-model:open="assistantConfigModal"
+    :title="$t('chat.assistant-config')"
+    @ok="setNewAssistantConfig"
+  >
+    <a-space direction="vertical" style="width: 100%">
+      <a-flex justify="space-between" align="center">
+        <h3 class="para-title">{{ $t("chat.model") }}</h3>
+        <a-tag :bordered="false" color="processing" style="font-size: 1em">{{
+          chatStore.curAssistant?.model
+        }}</a-tag>
+      </a-flex>
+      <div>
+        <h3 class="para-title">{{ $t("chat.assistant-name") }}</h3>
+        <a-input v-model:value="newAssistantName" placeholder="New Name" />
+      </div>
+      <div>
+        <h3 class="para-title">{{ $t("chat.temperature") }}</h3>
+        <a-row style="width: 100%">
+          <a-col :span="18">
+            <a-slider
+              v-model:value="assistantTemperature"
+              :min="0.0"
+              :max="2.0"
+              :step="0.01"
+              :marks="tempMarks"
+            ><template #mark="{ label }">
+                {{ label }}
+              </template></a-slider>
+          </a-col>
+          <a-col :span="4">
+            <a-input-number
+              v-model:value="assistantTemperature"
+              :min="0.0"
+              :max="2.0"
+              :step="0.01"
+              style="margin-left: 16px"
+            />
+          </a-col>
+        </a-row>
+      </div>
+      <div>
+        <h3 class="para-title">Top-P</h3>
+        <a-row style="width: 100%">
+          <a-col :span="18">
+            <a-slider
+              v-model:value="assistantTopP"
+              :min="0.0"
+              :max="1.0"
+              :step="0.01"
+              :marks="topPMarks"
+            ><template #mark="{ label }">
+                {{ label }}
+              </template></a-slider>
+          </a-col>
+          <a-col :span="4">
+            <a-input-number
+              v-model:value="assistantTopP"
+              :min="0.0"
+              :max="1.0"
+              :step="0.01"
+              style="margin-left: 16px"
+            />
+          </a-col>
+        </a-row>
+      </div>
+      <div>
+        <h3 class="para-title">{{ $t("chat.context-number") }}</h3>
+        <a-row style="width: 100%">
+          <a-col :span="18">
+            <a-slider
+              v-model:value="assistantContextNumber"
+              :min="0"
+              :max="10"
+              :step="1"
+              :marks="contextMarks"
+            ><template #mark="{ label }">
+                {{ label }}
+              </template></a-slider>
+          </a-col>
+          <a-col :span="4">
+            <a-input-number
+              v-model:value="assistantContextNumber"
+              :min="0"
+              :max="10"
+              :step="1"
+              style="margin-left: 16px"
+            />
+          </a-col>
+        </a-row>
+      </div>
+      <a-popconfirm
+        :title="$t('chat.delete-assistant-message')"
+        ok-text="Yes"
+        cancel-text="No"
+        @confirm="deleteCurAssistant"
+      >
+        <a-button type="primary" danger>{{
+          $t("chat.delete-cur-assistant")
+        }}</a-button></a-popconfirm>
+    </a-space>
+  </a-modal>
 </template>
 <style scoped>
 .list {
@@ -118,5 +297,10 @@ const selectThisAssistant = (assistant: AssistantInfo) => {
 
 .radio-button::before {
   width: 0;
+}
+
+.para-title {
+  margin-block-start: 5px;
+  margin-block-end: 5px;
 }
 </style>
