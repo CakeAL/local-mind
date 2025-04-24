@@ -71,15 +71,14 @@ pub async fn select_all_assistant(
 pub async fn select_assistant_config(db: &DbConn, uuid: Uuid) -> Result<Parameter, sea_orm::DbErr> {
     let v = assistant::Entity::find()
         .filter(assistant::Column::Uuid.eq(uuid))
-        .select_only()
-        .columns([assistant::Column::Parameter])
-        .into_json()
+        // .select_only()
+        // .columns([assistant::Column::Parameter])
         .one(db)
         .await?
         .ok_or(sea_orm::DbErr::RecordNotFound(
             "No such uuid to assistant".into(),
         ))?;
-    Ok(serde_json::from_value(v).unwrap_or_default())
+    Ok(serde_json::from_value(v.parameter).unwrap_or_default())
 }
 
 /// 更新某个助手的配置

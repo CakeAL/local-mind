@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SideItem from "@/components/SideItem.vue";
-import { AssistantInfo, AssistantParameter } from "@/models/assistant";
+import { AssistantInfo, Parameter } from "@/models/assistant";
 import { ModelList } from "@/models/model";
 import { useChatStore } from "@/stores/chat";
 import { invoke } from "@tauri-apps/api/core";
@@ -60,16 +60,19 @@ const selectThisAssistant = (assistant: AssistantInfo) => {
 };
 
 const assistantConfigModal = ref<boolean>(false);
-const assistantParameter = ref<AssistantParameter | null>(null);
+const assistantParameter = ref<Parameter | null>(null);
+const assistantContextNum = ref<number>(5);
 const openAssistantConfigModal = async (assistant: AssistantInfo) => {
   assistantParameter.value = null;
-  assistantParameter.value = await invoke<AssistantParameter>(
+  assistantContextNum.value = 5;
+  assistantParameter.value = await invoke<Parameter>(
     "get_assistant_config",
     {
       uuid: assistant.uuid,
     },
   ).catch((err) => message.warning(err));
   newAssistantName.value = assistant.name;
+  assistantContextNum.value = assistant.context_num;
   assistantConfigModal.value = true;
 };
 const newAssistantName = ref<string>("");
@@ -78,7 +81,7 @@ const setNewAssistantConfig = async () => {
     uuid: chatStore.getCurAssistant?.uuid,
     name: newAssistantName.value,
     para: assistantParameter.value,
-    contextNum: chatStore.getCurAssistant?.contextNum,
+    contextNum: assistantContextNum.value,
   }).catch((err) => message.warning(err));
   getAllAssistant(); // 更新信息
   assistantConfigModal.value = false; // 关闭配置窗口
@@ -108,14 +111,6 @@ const assistantTopP = computed({
   set: (value) => {
     if (assistantParameter.value) {
       assistantParameter.value.top_p = value;
-    }
-  },
-});
-const assistantContextNumber = computed({
-  get: () => chatStore.getCurAssistant?.contextNum ?? 5,
-  set: (value) => {
-    if (chatStore.getCurAssistant) {
-      chatStore.getCurAssistant.contextNum = value;
     }
   },
 });
@@ -178,6 +173,7 @@ const contextMarks = ref<Record<number, any>>({
     v-model:open="assistantConfigModal"
     :title="$t('chat.assistant-config')"
     @ok="setNewAssistantConfig"
+    style="user-select: none"
   >
     <a-space direction="vertical" style="width: 100%">
       <a-flex justify="space-between" align="center">
@@ -245,7 +241,7 @@ const contextMarks = ref<Record<number, any>>({
         <a-row style="width: 100%">
           <a-col :span="18">
             <a-slider
-              v-model:value="assistantContextNumber"
+              v-model:value="assistantContextNum"
               :min="0"
               :max="10"
               :step="1"
@@ -256,7 +252,7 @@ const contextMarks = ref<Record<number, any>>({
           </a-col>
           <a-col :span="4">
             <a-input-number
-              v-model:value="assistantContextNumber"
+              v-model:value="assistantContextNum"
               :min="0"
               :max="10"
               :step="1"

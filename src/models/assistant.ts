@@ -3,10 +3,10 @@ export interface AssistantInfo {
   uuid: string;
   name: string;
   model: string;
-  contextNum: number;
+  context_num: number;
 }
 
-export interface AssistantParameter {
+export interface Parameter {
   mirostat?: number;
   mirostat_eta?: number;
   mirostat_tau?: number;
