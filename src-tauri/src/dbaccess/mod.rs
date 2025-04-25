@@ -1,5 +1,6 @@
 pub mod assistant;
 pub mod conversation;
+pub mod embed;
 
 use std::path::Path;
 
