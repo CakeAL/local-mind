@@ -1,6 +1,7 @@
 pub mod assistant;
 pub mod conversation;
 pub mod embed;
+pub mod knowledge_base;
 
 use std::path::Path;
 
@@ -15,6 +16,7 @@ pub async fn get_db_conn(app_data_path: &Path) -> Result<DbConn, sea_orm::DbErr>
     // 创建 tables
     assistant::create_assistant_table(&db).await?;
     conversation::create_conversation_table(&db).await?;
+    knowledge_base::create_knowledge_base_table(&db).await?;
     Ok(db)
 }
 
