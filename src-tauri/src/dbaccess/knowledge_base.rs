@@ -1,7 +1,7 @@
 use crate::models::knowledge_base;
 use sea_orm::{
     ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, DbBackend, DbConn,
-    EntityTrait, ModelTrait, QueryFilter, Schema, Statement,
+    EntityTrait, ModelTrait, QueryFilter, QuerySelect, Schema, Statement,
 };
 
 /// 用来创建 knowledge_base 表
@@ -26,12 +26,12 @@ pub async fn create_knowledge_base_table(db: &DbConn) -> Result<(), sea_orm::DbE
 /// 新建知识库
 pub async fn insert_knowledge_base(
     db: &DbConn,
-    name: String,
-    model: String,
+    name: &str,
+    model: &str,
 ) -> Result<knowledge_base::Model, sea_orm::DbErr> {
     let new_knowledge_base = knowledge_base::ActiveModel {
-        name: Set(name),
-        model: Set(model),
+        name: Set(name.to_owned()),
+        model: Set(model.to_owned()),
         ..Default::default()
     };
     let new_knowledge_base = new_knowledge_base.insert(db).await?;
@@ -41,7 +41,7 @@ pub async fn insert_knowledge_base(
 /// 向知识库新增文件
 pub async fn update_knowledge_base_files(
     db: &DbConn,
-    name: String,
+    name: &str,
     file_paths: Vec<String>,
 ) -> Result<knowledge_base::Model, sea_orm::DbErr> {
     let knowledge_base = knowledge_base::Entity::find()
@@ -98,6 +98,23 @@ pub async fn select_knowledge_base_files(
             "No Such Knowledge Base".into(),
         ))?;
     Ok(serde_json::from_value(knowledge_base.file_paths).unwrap_or_default())
+}
+
+/// 返回所有知识库
+pub async fn select_all_knowledge_base(
+    db: &DbConn,
+) -> Result<Vec<knowledge_base::Model>, sea_orm::DbErr> {
+    let knowledge_bases = knowledge_base::Entity::find()
+        .select_only()
+        .columns([
+            knowledge_base::Column::Name,
+            knowledge_base::Column::Model,
+            knowledge_base::Column::Id,
+            knowledge_base::Column::Name,
+        ])
+        .all(db)
+        .await?;
+    Ok(knowledge_bases)
 }
 
 /// 删除某个知识库

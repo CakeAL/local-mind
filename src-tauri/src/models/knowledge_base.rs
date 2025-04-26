@@ -1,11 +1,12 @@
 use sea_orm::entity::prelude::*;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, DeriveEntityModel)]
+#[derive(Debug, Clone, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[sea_orm(table_name = "knowledge_base")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i64,
-    #[sea_orm(indexed)]
+    #[sea_orm(indexed, unique)]
     pub name: String,     // 知识库名称
     pub model: String,    // 嵌入模型名称 "bge-m3:567m"
     pub request_text_num: i32, // 请求文档片段数量, 默认: 6
