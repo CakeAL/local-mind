@@ -1,5 +1,5 @@
 import Chat from "@/views/Chat/Chat.vue";
-import File from "@/views/File.vue";
+import KnowledgeBase from "@/views/KnowledgeBase/KnowledgeBase.vue";
 import Setting from "@/views/Setting.vue";
 import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
@@ -20,9 +20,9 @@ const routes = [
     component: Setting,
   },
   {
-    path: "/file",
-    name: "File",
-    component: File,
+    path: "/knowledge-base",
+    name: "KnowledgeBase",
+    component: KnowledgeBase,
   },
 ];
 

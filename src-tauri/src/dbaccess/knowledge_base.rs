@@ -1,7 +1,6 @@
-use crate::models::knowledge_base;
+use crate::models::knowledge_base::{self, KnowledgeBaseInfo};
 use sea_orm::{
-    ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, DbBackend, DbConn,
-    EntityTrait, ModelTrait, QueryFilter, QuerySelect, Schema, Statement,
+    ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, DbBackend, DbConn, EntityTrait, ModelTrait, QueryFilter, QueryOrder, QuerySelect, Schema, Statement
 };
 
 /// 用来创建 knowledge_base 表
@@ -32,6 +31,10 @@ pub async fn insert_knowledge_base(
     let new_knowledge_base = knowledge_base::ActiveModel {
         name: Set(name.to_owned()),
         model: Set(model.to_owned()),
+        request_text_num: Set(6),
+        segmenting_size: Set(1024),
+        match_threshold: Set(0.5),
+        file_paths: Set(serde_json::json!([])),
         ..Default::default()
     };
     let new_knowledge_base = new_knowledge_base.insert(db).await?;
@@ -103,15 +106,16 @@ pub async fn select_knowledge_base_files(
 /// 返回所有知识库
 pub async fn select_all_knowledge_base(
     db: &DbConn,
-) -> Result<Vec<knowledge_base::Model>, sea_orm::DbErr> {
+) -> Result<Vec<KnowledgeBaseInfo>, sea_orm::DbErr> {
     let knowledge_bases = knowledge_base::Entity::find()
         .select_only()
         .columns([
             knowledge_base::Column::Name,
             knowledge_base::Column::Model,
             knowledge_base::Column::Id,
-            knowledge_base::Column::Name,
         ])
+        .order_by_asc(knowledge_base::Column::Id)
+        .into_model::<KnowledgeBaseInfo>()
         .all(db)
         .await?;
     Ok(knowledge_bases)

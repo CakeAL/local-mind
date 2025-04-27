@@ -1,7 +1,7 @@
 {
   "menu": {
     "chat": "聊天",
-    "file": "文件",
+    "knowledge-base": "知识库",
     "setting": "设置"
   },
   "chat": {
@@ -19,6 +19,11 @@
     "context-number": "上下文长度",
     "delete-cur-assistant": "删除当前助手",
     "delete-assistant-message": "确定删除当前助手吗？"
+  },
+  "knowledge-base": {
+    "new-knowledge-base": "+ 新建知识库",
+    "knowledge-base-name": "知识库名称（唯一）",
+    "embedding-model": "嵌入模型"
   },
   "copied": "已复制",
   "thinking": "思考中...",

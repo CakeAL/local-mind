@@ -1,7 +1,7 @@
 {
   "menu": {
     "chat": "Chat",
-    "file": "File",
+    "knowledge-base": "KnowledgeBase",
     "setting": "Setting"
   },
   "chat": {
@@ -19,6 +19,11 @@
     "context-number": "Context Number",
     "delete-cur-assistant": "Delete Current Assistant",
     "delete-assistant-message": "Are you sure you want to delete this assistant?"
+  },
+  "knowledge-base": {
+    "new-knowledge-base": "+ New Knowledge Base",
+    "knowledge-base-name": "Knowledge Base Name (Unique)",
+    "embedding-model": "Embedding Model"
   },
   "copied": "Copied",
   "thinking": "Thinking...",

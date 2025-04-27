@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SideItem from "@/components/SideItem.vue";
 import { AssistantInfo, Parameter } from "@/models/assistant";
-import { ModelList } from "@/models/model";
+import { useAppStore } from "@/stores/app";
 import { useChatStore } from "@/stores/chat";
 import { invoke } from "@tauri-apps/api/core";
 import { message } from "ant-design-vue";
@@ -10,10 +10,10 @@ import { computed, onMounted, ref } from "vue";
 const assistants = ref<AssistantInfo[]>([]);
 const openModal = ref(false);
 const chatStore = useChatStore();
+const appStore = useAppStore();
 const selectedModelName = ref<String>("");
 
 onMounted(() => {
-  getModelList();
   getAllAssistant().then(() => {
     if (assistants.value.length !== 0) {
       chatStore.setCurAssistant(assistants.value[0]);
@@ -27,15 +27,6 @@ const getAllAssistant = async () => {
   );
   if (res.length !== 0) {
     assistants.value = res;
-  }
-};
-
-const getModelList = async () => {
-  if (chatStore.modelListIsEmpty) {
-    let res = await invoke<ModelList>("list_models").catch(
-      (err) => message.warning(err),
-    );
-    chatStore.setModelList(res);
   }
 };
 
@@ -53,6 +44,7 @@ const newAssistant = async () => {
     assistants.value.push(res);
     chatStore.setCurAssistant(res);
   }
+  selectedModelName.value = "";
 };
 
 const selectThisAssistant = (assistant: AssistantInfo) => {
@@ -152,7 +144,7 @@ const contextMarks = ref<Record<number, any>>({
     :title="$t('chat.select-model')"
     @ok="newAssistant"
   >
-    <p v-if="chatStore.modelListIsEmpty">
+    <p v-if="appStore.modelListIsEmpty">
       {{ $t("chat.no-models") }}
     </p>
     <a-radio-group
@@ -162,7 +154,7 @@ const contextMarks = ref<Record<number, any>>({
       button-style="solid"
     >
       <a-radio-button
-        v-for="(model, index) in chatStore.getModels"
+        v-for="(model, index) in appStore.getModels"
         :key="index"
         :value="model.name"
         class="radio-button"

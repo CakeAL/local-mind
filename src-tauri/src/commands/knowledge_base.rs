@@ -10,14 +10,17 @@ use crate::{
             insert_knowledge_base, select_all_knowledge_base, update_knowledge_base_files,
         },
     },
-    models::{app_state::AppState, knowledge_base},
+    models::{
+        app_state::AppState,
+        knowledge_base::{self, KnowledgeBaseInfo},
+    },
     utils::path,
 };
 
 #[tauri::command]
 pub async fn get_all_knowledge_base(
     state: tauri::State<'_, AppState>,
-) -> Result<Vec<knowledge_base::Model>, String> {
+) -> Result<Vec<KnowledgeBaseInfo>, String> {
     let db = state.db.read().await;
     select_all_knowledge_base(&db)
         .await
@@ -29,7 +32,7 @@ pub async fn new_knowledge_base(
     state: tauri::State<'_, AppState>,
     name: String,
     model: String,
-) -> Result<knowledge_base::Model, String> {
+) -> Result<KnowledgeBaseInfo, String> {
     let db = state.db.read().await;
     // 这里如果名字重复会报错返回阻止继续新建
     let new_knowledge_base = insert_knowledge_base(&db, &name, &model)
@@ -40,7 +43,8 @@ pub async fn new_knowledge_base(
     new_embedding_table(&embedding_db, &name)
         .await
         .map_err(|e| e.to_string())?;
-    Ok(new_knowledge_base)
+    let new_knowledge_base_info: KnowledgeBaseInfo = new_knowledge_base.into();
+    Ok(new_knowledge_base_info)
 }
 
 /// 应该传入拷贝后的文件，返回提取出来的文字（按照1024分割（默认））

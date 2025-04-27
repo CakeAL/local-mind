@@ -23,11 +23,11 @@ pub async fn new_embedding_table(
             )"
     );
     embedding_db.execute(&sql, ()).await?;
-    // 创建向量索引，用于提升速度
-    let sql = format!(
-        "CREATE INDEX {knowledge_base_name}_idx ON {knowledge_base_name} (libsql_vector_idx(embedding));"
-    );
-    embedding_db.execute(&sql, ()).await?;
+    // // 创建向量索引，用于提升速度
+    // let sql = format!(
+    //     "CREATE INDEX {knowledge_base_name}_idx ON {knowledge_base_name} (libsql_vector_idx(embedding));"
+    // );
+    // embedding_db.execute(&sql, ()).await?;
     Ok(())
 }
 

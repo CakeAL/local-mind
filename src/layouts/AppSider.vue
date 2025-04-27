@@ -73,10 +73,10 @@ const items = reactive([
     path: "/chat",
   },
   {
-    key: "file",
+    key: "knowledge-base",
     icon: () => h(FolderOpenOutlined),
-    label: computed(() => t("menu.file")),
-    title: computed(() => t("menu.file")),
+    label: computed(() => t("menu.knowledge-base")),
+    title: computed(() => t("menu.knowledge-base")),
   },
 ]);
 // 底部固定菜单项

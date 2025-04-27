@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { useChatStore } from "@/stores/chat";
+import { onUnmounted } from "vue";
 import ChatContent from "./ChatContent.vue";
 import ChatSider from "./ChatSider.vue";
 const chatStore = useChatStore();
+onUnmounted(() => {
+  chatStore.clear();
+});
 </script>
 <template>
   <a-layout class="chat-view">
