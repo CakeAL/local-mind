@@ -1,9 +1,7 @@
 use anyhow::Result;
 use commands::*;
 use models::app_state::AppState;
-use ollama_rust_api::Ollama;
 use tauri::{async_runtime::spawn, AppHandle, Manager};
-use tokio::sync::RwLock;
 use utils::{path, window};
 
 pub mod commands;
@@ -19,6 +17,7 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_clipboard_manager::init())
+        .manage(AppState::default())
         .setup(|app| {
             let main_window = window::build_main_window(app)?;
             window::set_titlebar_style(&main_window)?;
@@ -44,12 +43,11 @@ pub fn run() {
 
 async fn setup(app: AppHandle) -> Result<()> {
     let app_data_path = path::get_data_dir(&app)?;
-    let db_conn = dbaccess::get_db_conn(&app_data_path).await?;
+    let state = app.state::<AppState>();
+    // 不要调换下面两行的顺序
     let embedding_db_conn = dbaccess::embed::get_embedding_db_conn(&app_data_path).await?;
-    app.manage(AppState {
-        ollama: RwLock::new(Ollama::default()),
-        db: RwLock::new(db_conn),
-        embedding_db: RwLock::new(embedding_db_conn),
-    });
+    let db_conn = dbaccess::get_db_conn(&app_data_path).await?;
+    *state.db.write().await = db_conn;
+    *state.embedding_db.write().await = Some(embedding_db_conn);
     Ok(())
 }

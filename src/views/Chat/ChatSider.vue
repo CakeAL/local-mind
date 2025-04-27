@@ -118,11 +118,11 @@ const tempMarks = ref<Record<number, any>>({
   0.0: "0.0",
   0.7: "0.7",
   1.0: "1.0",
+  2.0: "2.0",
 });
 const topPMarks = ref<Record<number, any>>({
   0.0: "0.0",
   1.0: "1.0",
-  2.0: "2.0",
 });
 const contextMarks = ref<Record<number, any>>({
   0: "0",

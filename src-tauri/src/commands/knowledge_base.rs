@@ -36,7 +36,7 @@ pub async fn new_knowledge_base(
         .await
         .map_err(|e| e.to_string())?;
     // 再在向量数据库新建
-    let embedding_db = state.embedding_db.read().await;
+    let embedding_db = state.get_embedding_db().await?;
     new_embedding_table(&embedding_db, &name)
         .await
         .map_err(|e| e.to_string())?;
@@ -80,7 +80,7 @@ pub async fn add_file_to_path(
 ) -> Result<Vec<String>, String> {
     let state = app.state::<AppState>();
     let db = state.db.read().await;
-    let embedding_db = state.embedding_db.read().await;
+    let embedding_db = state.get_embedding_db().await?;
     let ollama = state.ollama.read().await;
     let app_data_path = path::get_data_dir(&app).map_err(|e| e.to_string())?;
     let mut file_paths_succeed = vec![];
