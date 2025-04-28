@@ -8,6 +8,7 @@
     "npm:@tauri-apps/api@2": "2.5.0",
     "npm:@tauri-apps/cli@2": "2.4.0",
     "npm:@tauri-apps/plugin-clipboard-manager@^2.2.2": "2.2.2",
+    "npm:@tauri-apps/plugin-dialog@~2.2.1": "2.2.1",
     "npm:@tauri-apps/plugin-shell@^2.2.1": "2.2.1",
     "npm:@types/markdown-it@^14.1.2": "14.1.2",
     "npm:ant-design-vue@^4.2.6": "4.2.6_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
@@ -352,6 +353,12 @@
     },
     "@tauri-apps/plugin-clipboard-manager@2.2.2": {
       "integrity": "sha512-bZvDLMqfcNmsw7Ag8I49jlaCjdpDvvlJHnpp6P+Gg/3xtpSERdwlDxm7cKGbs2mj46dsw4AuG3RoAgcpwgioUA==",
+      "dependencies": [
+        "@tauri-apps/api"
+      ]
+    },
+    "@tauri-apps/plugin-dialog@2.2.1": {
+      "integrity": "sha512-wZmCouo4PgTosh/UoejPw9DPs6RllS5Pp3fuOV2JobCu36mR5AXU2MzU9NZiVaFi/5Zfc8RN0IhcZHnksJ1o8A==",
       "dependencies": [
         "@tauri-apps/api"
       ]
@@ -1724,6 +1731,7 @@
         "npm:@tauri-apps/api@2",
         "npm:@tauri-apps/cli@2",
         "npm:@tauri-apps/plugin-clipboard-manager@^2.2.2",
+        "npm:@tauri-apps/plugin-dialog@~2.2.1",
         "npm:@tauri-apps/plugin-shell@^2.2.1",
         "npm:@types/markdown-it@^14.1.2",
         "npm:ant-design-vue@^4.2.6",

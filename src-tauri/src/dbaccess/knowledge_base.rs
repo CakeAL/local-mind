@@ -1,6 +1,7 @@
 use crate::models::knowledge_base::{self, KnowledgeBaseInfo};
 use sea_orm::{
-    ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, DbBackend, DbConn, EntityTrait, ModelTrait, QueryFilter, QueryOrder, QuerySelect, Schema, Statement
+    ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, DbBackend, DbConn,
+    EntityTrait, ModelTrait, QueryFilter, QueryOrder, QuerySelect, Schema, Statement,
 };
 
 /// 用来创建 knowledge_base 表

@@ -30,6 +30,7 @@ serde_json = "1"
 tauri = { version = "2", features = [] }
 tauri-plugin-clipboard-manager = "2.2.2"
 tauri-plugin-decorum = { git = "https://github.com/CakeAL/tauri-plugin-decorum" }
+tauri-plugin-dialog = "2"
 tauri-plugin-shell = "2.2.1"
 tokio = { version = "1", features = ["full"] }
 tokio-stream = "0.1.17"
