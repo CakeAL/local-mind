@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf};
+use std::{collections::HashSet, fs, path::PathBuf};
 
 use ollama_rust_api::model::embedding::EmbedRequestParameters;
 use tauri::Manager;
@@ -11,10 +11,7 @@ use crate::{
             update_knowledge_base_files,
         },
     },
-    models::{
-        app_state::AppState,
-        knowledge_base::{self, KnowledgeBaseInfo},
-    },
+    models::{app_state::AppState, knowledge_base::KnowledgeBaseInfo},
     utils::path,
 };
 
@@ -64,6 +61,7 @@ fn parse_file(file_path: &PathBuf) -> Result<Vec<String>, String> {
     let extension = file_path.extension();
     let full_text = match extension {
         Some(ext) if ext == "pdf" => {
+            dbg!(&file_path);
             let bytes = std::fs::read(file_path).unwrap();
             let output = pdf_extract::extract_text_from_mem(&bytes)
                 .map_err(|e| e.to_string())?
@@ -89,9 +87,9 @@ fn parse_file(file_path: &PathBuf) -> Result<Vec<String>, String> {
 
 /// 传过来的 file 应该都是有效的文件
 #[tauri::command]
-pub async fn add_file_to_path(
+pub async fn add_file_to_knowledge_base(
     app: tauri::AppHandle,
-    knowledge_base: knowledge_base::Model,
+    knowledge_base: KnowledgeBaseInfo,
     file_paths: Vec<String>,
 ) -> Result<Vec<String>, String> {
     let state = app.state::<AppState>();
@@ -99,7 +97,7 @@ pub async fn add_file_to_path(
     let embedding_db = state.get_embedding_db().await?;
     let ollama = state.ollama.read().await;
     let app_data_path = path::get_data_dir(&app).map_err(|e| e.to_string())?;
-    let mut file_paths_succeed = vec![];
+    let mut file_paths_succeed = HashSet::new();
     let mut embed_file_failed = vec![];
     // 生成嵌入向量并返回添加到向量数据库中
     for file_path in file_paths {
@@ -110,6 +108,7 @@ pub async fn add_file_to_path(
             "knowledge_base/{}/{}",
             &knowledge_base.name, file_name
         ));
+        let _ = fs::create_dir_all(copied_file_path.parent().unwrap());
         let _ = fs::copy(&file_path, &copied_file_path);
         // 解析该文件
         let chunks = match parse_file(&copied_file_path) {
@@ -146,7 +145,7 @@ pub async fn add_file_to_path(
             .await
             {
                 Ok(_) => {
-                    file_paths_succeed.push(copied_file_path.to_owned());
+                    file_paths_succeed.insert(copied_file_path.to_owned());
                 }
                 Err(e) => {
                     embed_file_failed.push(format!("{} embed failed: {}", &file_path.display(), e));

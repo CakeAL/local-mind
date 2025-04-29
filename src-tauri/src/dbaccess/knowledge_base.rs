@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::models::knowledge_base::{self, KnowledgeBaseInfo};
 use sea_orm::{
     ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, DbBackend, DbConn,
@@ -46,7 +48,7 @@ pub async fn insert_knowledge_base(
 pub async fn update_knowledge_base_files(
     db: &DbConn,
     name: &str,
-    file_paths: Vec<String>,
+    file_paths: HashSet<String>,
 ) -> Result<knowledge_base::Model, sea_orm::DbErr> {
     let knowledge_base = knowledge_base::Entity::find()
         .filter(knowledge_base::Column::Name.eq(name))
@@ -55,8 +57,9 @@ pub async fn update_knowledge_base_files(
         .ok_or(sea_orm::DbErr::RecordNotFound(
             "No Such Knowledge Base".into(),
         ))?;
-    let mut stored_paths = serde_json::from_value::<Vec<String>>(knowledge_base.file_paths.clone())
-        .unwrap_or_default();
+    let mut stored_paths =
+        serde_json::from_value::<HashSet<String>>(knowledge_base.file_paths.clone())
+            .unwrap_or_default();
     let mut knowledge_base: knowledge_base::ActiveModel = knowledge_base.into();
     stored_paths.extend(file_paths);
     knowledge_base.file_paths = Set(serde_json::json!(stored_paths));

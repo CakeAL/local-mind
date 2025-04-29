@@ -1,4 +1,5 @@
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { openPath } from "@tauri-apps/plugin-opener";
 import { message } from "ant-design-vue";
 import { i18n } from "./plugins/i18n";
 
@@ -17,4 +18,10 @@ export function toFormatDateString(createdAt: Date) {
 export const copyToClipboard = async (content: string) => {
   await writeText(content);
   message.success(i18n.global.t("copied"));
+};
+
+export const openFileLocation = async (path: string) => {
+  const dirPath = path.replace(/[\\/]([^\\/]+)$/, "");
+  // console.log(dirPath);
+  await openPath(dirPath);
 };

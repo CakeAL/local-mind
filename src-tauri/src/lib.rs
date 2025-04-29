@@ -16,6 +16,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .manage(AppState::default())
@@ -40,7 +41,7 @@ pub fn run() {
             knowledge_base::get_all_knowledge_base,
             knowledge_base::get_knowledge_base_files,
             knowledge_base::new_knowledge_base,
-            knowledge_base::add_file_to_path,
+            knowledge_base::add_file_to_knowledge_base,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

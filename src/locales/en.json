@@ -24,7 +24,9 @@
     "new-knowledge-base": "+ New Knowledge Base",
     "knowledge-base-name": "Knowledge Base Name (Unique)",
     "embedding-model": "Embedding Model",
-    "file": "File"
+    "file": "File",
+    "embedding": "Embedding...",
+    "embedding-message": "This may take a while."
   },
   "copied": "Copied",
   "thinking": "Thinking...",
