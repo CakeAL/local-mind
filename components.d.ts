@@ -39,6 +39,7 @@ declare module 'vue' {
     ASpin: typeof import('ant-design-vue/es')['Spin']
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
+    AUploadDragger: typeof import('ant-design-vue/es')['UploadDragger']
     MarkdownRender: typeof import('./src/components/MarkdownRender.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

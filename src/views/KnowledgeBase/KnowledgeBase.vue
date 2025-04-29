@@ -14,7 +14,9 @@ onUnmounted(() => {
       <KnowledgeBaseSider />
     </a-layout-sider>
     <a-layout-content class="knowledge-base-content">
-      <KnowledgeBaseContent />
+      <KnowledgeBaseContent
+        :knowledge-base="knowledgeBaseStore.getCurKnowledgeBase"
+      />
     </a-layout-content>
   </a-layout>
 </template>

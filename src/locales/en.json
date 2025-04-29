@@ -23,9 +23,12 @@
   "knowledge-base": {
     "new-knowledge-base": "+ New Knowledge Base",
     "knowledge-base-name": "Knowledge Base Name (Unique)",
-    "embedding-model": "Embedding Model"
+    "embedding-model": "Embedding Model",
+    "file": "File"
   },
   "copied": "Copied",
   "thinking": "Thinking...",
-  "thought": "Thought"
+  "thought": "Thought",
+  "upload-text": "Click or drag file to this area to upload",
+  "upload-hint": "Support pdf... format"
 }

@@ -7,7 +7,8 @@ use crate::{
     dbaccess::{
         embed::{insert_embedding, new_embedding_table},
         knowledge_base::{
-            insert_knowledge_base, select_all_knowledge_base, update_knowledge_base_files,
+            insert_knowledge_base, select_all_knowledge_base, select_knowledge_base_files,
+            update_knowledge_base_files,
         },
     },
     models::{
@@ -45,6 +46,17 @@ pub async fn new_knowledge_base(
         .map_err(|e| e.to_string())?;
     let new_knowledge_base_info: KnowledgeBaseInfo = new_knowledge_base.into();
     Ok(new_knowledge_base_info)
+}
+
+#[tauri::command]
+pub async fn get_knowledge_base_files(
+    state: tauri::State<'_, AppState>,
+    name: String,
+) -> Result<Vec<String>, String> {
+    let db = state.db.read().await;
+    select_knowledge_base_files(&db, name)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 /// 应该传入拷贝后的文件，返回提取出来的文字（按照1024分割（默认））

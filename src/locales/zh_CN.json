@@ -23,9 +23,12 @@
   "knowledge-base": {
     "new-knowledge-base": "+ 新建知识库",
     "knowledge-base-name": "知识库名称（唯一）",
-    "embedding-model": "嵌入模型"
+    "embedding-model": "嵌入模型",
+    "file": "文件"
   },
   "copied": "已复制",
   "thinking": "思考中...",
-  "thought": "已思考"
+  "thought": "已思考",
+  "upload-text": "点击或拖拽文件到此区域上传",
+  "upload-hint": "支持 pdf... 格式"
 }

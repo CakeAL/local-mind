@@ -12,3 +12,11 @@ await setupI18n(app);
 app.use(router);
 
 app.mount("#root");
+
+// 阻止浏览器默认行为
+document.addEventListener("drop", function(e) {
+  e.preventDefault();
+}, false);
+document.addEventListener("dragover", function(e) {
+  e.preventDefault();
+}, false);

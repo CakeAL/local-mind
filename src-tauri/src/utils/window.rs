@@ -13,6 +13,7 @@ pub fn build_main_window(app: &tauri::App) -> Result<WebviewWindow> {
             min_height: Some(600.0),
             min_width: Some(800.0),
             title: "Local Mind".into(),
+            drag_drop_enabled: true,
             ..Default::default()
         },
     )?;

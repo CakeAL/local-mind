@@ -38,6 +38,7 @@ pub fn run() {
             conversation::get_assistant_conversation,
             conversation::delete_message,
             knowledge_base::get_all_knowledge_base,
+            knowledge_base::get_knowledge_base_files,
             knowledge_base::new_knowledge_base,
             knowledge_base::add_file_to_path,
         ])
