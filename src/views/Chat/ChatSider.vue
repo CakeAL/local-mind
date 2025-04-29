@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SideItem from "@/components/SideItem.vue";
 import { AssistantInfo, Parameter } from "@/models/assistant";
+import { KnowledgeBaseInfo } from "@/models/knowledge_base";
 import { useAppStore } from "@/stores/app";
 import { useChatStore } from "@/stores/chat";
 import { invoke } from "@tauri-apps/api/core";
@@ -11,7 +12,9 @@ const assistants = ref<AssistantInfo[]>([]);
 const openModal = ref(false);
 const chatStore = useChatStore();
 const appStore = useAppStore();
-const selectedModelName = ref<String>("");
+const selectedModelName = ref<string>("");
+const selectedKnowledgeBaseName = ref<string | null>(null);
+const knowledgeBases = ref<KnowledgeBaseInfo[]>([]);
 
 onMounted(() => {
   getAllAssistant().then(() => {
@@ -19,6 +22,7 @@ onMounted(() => {
       chatStore.setCurAssistant(assistants.value[0]);
     }
   });
+  getAllKnowledgeBase();
 });
 
 const getAllAssistant = async () => {
@@ -27,6 +31,15 @@ const getAllAssistant = async () => {
   );
   if (res.length !== 0) {
     assistants.value = res;
+  }
+};
+
+const getAllKnowledgeBase = async () => {
+  let res = await invoke<KnowledgeBaseInfo[]>("get_all_knowledge_base").catch((
+    err,
+  ) => message.warning(err));
+  if (res.length !== 0) {
+    knowledgeBases.value = res;
   }
 };
 
@@ -66,6 +79,7 @@ const openAssistantConfigModal = async (assistant: AssistantInfo) => {
   newAssistantName.value = assistant.name;
   assistantContextNum.value = assistant.context_num;
   assistantConfigModal.value = true;
+  selectedKnowledgeBaseName.value = assistant.knowledge_base;
 };
 const newAssistantName = ref<string>("");
 const setNewAssistantConfig = async () => {
@@ -74,6 +88,7 @@ const setNewAssistantConfig = async () => {
     name: newAssistantName.value,
     para: assistantParameter.value,
     contextNum: assistantContextNum.value,
+    knowledgeBase: selectedKnowledgeBaseName.value,
   }).catch((err) => message.warning(err));
   getAllAssistant(); // 更新信息
   assistantConfigModal.value = false; // 关闭配置窗口
@@ -120,6 +135,15 @@ const contextMarks = ref<Record<number, any>>({
   0: "0",
   5: "5",
   10: "10",
+});
+
+const modelOptions = computed(() => {
+  return knowledgeBases.value.map(knowledgeBase => {
+    return {
+      label: knowledgeBase.name,
+      value: knowledgeBase.name,
+    };
+  });
 });
 </script>
 <template>
@@ -174,10 +198,26 @@ const contextMarks = ref<Record<number, any>>({
           chatStore.curAssistant?.model
         }}</a-tag>
       </a-flex>
-      <div>
-        <h3 class="para-title">{{ $t("chat.assistant-name") }}</h3>
-        <a-input v-model:value="newAssistantName" placeholder="New Name" />
-      </div>
+      <a-row>
+        <a-col :span="6">
+          <h3 class="para-title">{{ $t("chat.assistant-name") }}</h3>
+        </a-col>
+        <a-col :span="18">
+          <a-input v-model:value="newAssistantName" placeholder="New Name" />
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span="6">
+          <h3 class="para-title">{{ $t("chat.knowledge-base") }}</h3>
+        </a-col>
+        <a-col :span="18">
+          <a-select
+            v-model:value="selectedKnowledgeBaseName"
+            style="width: 100%"
+            :options="modelOptions"
+          ></a-select>
+        </a-col>
+      </a-row>
       <div>
         <h3 class="para-title">{{ $t("chat.temperature") }}</h3>
         <a-row style="width: 100%">

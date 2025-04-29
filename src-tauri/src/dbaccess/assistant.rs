@@ -41,6 +41,7 @@ pub async fn insert_assistant(
             ..Default::default()
         })),
         context_num: Set(5),
+        knowledge_base: Set(None),
         ..Default::default()
     };
     let new_assistant: assistant::Model = new_assistant.insert(db).await?;
@@ -59,6 +60,7 @@ pub async fn select_all_assistant(
             assistant::Column::Name,
             assistant::Column::Model,
             assistant::Column::ContextNum,
+            assistant::Column::KnowledgeBase,
         ])
         .order_by_asc(assistant::Column::Id)
         .into_model::<assistant::AssistantInfo>()
@@ -88,6 +90,7 @@ pub async fn update_assistant_config(
     name: String,
     para: Parameter,
     context_num: Option<i64>,
+    knowledge_base: Option<String>,
 ) -> Result<assistant::Model, sea_orm::DbErr> {
     let assistant = assistant::Entity::find()
         .filter(assistant::Column::Uuid.eq(uuid))
@@ -99,6 +102,9 @@ pub async fn update_assistant_config(
     let mut assistant: assistant::ActiveModel = assistant.into();
     assistant.parameter = Set(serde_json::json!(para));
     assistant.name = Set(name);
+    if let Some(knowledge_base) = knowledge_base {
+        assistant.knowledge_base = Set(Some(knowledge_base));
+    }
     if let Some(context_num) = context_num {
         assistant.context_num = Set(context_num);
     }

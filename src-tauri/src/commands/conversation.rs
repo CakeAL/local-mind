@@ -131,6 +131,7 @@ pub async fn user_send_message(
         name: _,
         model,
         context_num,
+        knowledge_base,
     } = assistant_info;
     let db = state.db.read().await;
     // 插入用户消息至数据库
@@ -169,6 +170,7 @@ pub async fn regenerate_assistant_message(
         name: _,
         model,
         context_num,
+        knowledge_base,
     } = assistant_info;
     let db = state.db.read().await;
     // 让大模型生成新的消息，这里应该根据 message_id 之前的消息来生成消息

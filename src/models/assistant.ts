@@ -4,6 +4,7 @@ export interface AssistantInfo {
   name: string;
   model: string;
   context_num: number;
+  knowledge_base: string | null;
 }
 
 export interface Parameter {

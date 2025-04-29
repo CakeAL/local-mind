@@ -53,11 +53,19 @@ pub async fn update_assistant_config(
     name: String,
     para: Parameter,
     context_num: Option<i64>,
+    knowledge_base: Option<String>,
 ) -> Result<(), String> {
     let db = state.db.read().await;
-    let _ = dbaccess::assistant::update_assistant_config(&db, uuid, name, para, context_num)
-        .await
-        .map_err(|e| e.to_string())?;
+    let _ = dbaccess::assistant::update_assistant_config(
+        &db,
+        uuid,
+        name,
+        para,
+        context_num,
+        knowledge_base,
+    )
+    .await
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 

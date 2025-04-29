@@ -13,6 +13,7 @@ pub struct Model {
     pub model: String,    // 调用模型名称 "deepseek-r1:8b"
     pub context_num: i64, // 上下文数, 默认: 5
     pub parameter: Json,
+    pub knowledge_base: Option<String>, // 连接的数据库
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -27,6 +28,7 @@ pub struct AssistantInfo {
     pub name: String,
     pub model: String,
     pub context_num: i64,
+    pub knowledge_base: Option<String>,
 }
 
 impl From<Model> for AssistantInfo {
@@ -37,6 +39,7 @@ impl From<Model> for AssistantInfo {
             name: m.name,
             model: m.model,
             context_num: m.context_num,
+            knowledge_base: m.knowledge_base,
         }
     }
 }
