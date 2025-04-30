@@ -13,6 +13,7 @@ export interface Message {
   prompt_eval_duration: number;
   eval_count: number;
   eval_duration: number;
+  search_result: SearchResult[] | null;
 }
 
 export const newAssistantMessage = (assistant: AssistantInfo): Message => {
@@ -31,3 +32,9 @@ export const newAssistantMessage = (assistant: AssistantInfo): Message => {
     eval_duration: 0,
   } as Message;
 };
+
+export interface SearchResult {
+  content: String;
+  file_path: String;
+  distance: number;
+}

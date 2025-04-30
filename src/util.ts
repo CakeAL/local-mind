@@ -2,7 +2,6 @@ import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { openPath } from "@tauri-apps/plugin-opener";
 import { message } from "ant-design-vue";
 import { i18n } from "./plugins/i18n";
-
 export function toFormatDateString(createdAt: Date) {
   let date = new Date(createdAt);
   const options: Intl.DateTimeFormatOptions = {

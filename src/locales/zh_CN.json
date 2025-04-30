@@ -19,7 +19,8 @@
     "context-number": "上下文长度",
     "delete-cur-assistant": "删除当前助手",
     "delete-assistant-message": "确定删除当前助手吗？",
-    "knowledge-base": "知识库"
+    "knowledge-base": "知识库",
+    "reference": "引用"
   },
   "knowledge-base": {
     "new-knowledge-base": "+ 新建知识库",

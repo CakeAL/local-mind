@@ -19,7 +19,8 @@
     "context-number": "Context Number",
     "delete-cur-assistant": "Delete Current Assistant",
     "delete-assistant-message": "Are you sure you want to delete this assistant?",
-    "knowledge-base": "KnowledgeBase"
+    "knowledge-base": "KnowledgeBase",
+    "reference": "Reference"
   },
   "knowledge-base": {
     "new-knowledge-base": "+ New Knowledge Base",
