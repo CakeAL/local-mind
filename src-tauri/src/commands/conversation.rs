@@ -1,5 +1,8 @@
 use chrono::{DateTime, Utc};
-use ollama_rust_api::model::chat::{ChatRequestParameters, Message};
+use ollama_rust_api::model::{
+    chat::{ChatRequestParameters, Message},
+    embedding::EmbedRequestParameters,
+};
 use sea_orm::DbConn;
 use serde::Serialize;
 use tauri::ipc::Channel;
@@ -7,7 +10,7 @@ use tokio_stream::StreamExt;
 use uuid::Uuid;
 
 use crate::{
-    dbaccess::{self},
+    dbaccess::{self, embed::SearchResult},
     models::{app_state::AppState, assistant::AssistantInfo, conversation},
 };
 
@@ -16,6 +19,8 @@ use crate::{
 pub enum ChatResponseEvent {
     #[serde(rename_all = "camelCase")]
     Started { user_message: conversation::Model },
+    #[serde(rename_all = "camelCase")]
+    ReferenceContent { search_result: Vec<SearchResult> },
     #[serde(rename_all = "camelCase")]
     Progress {
         model: String,
@@ -36,9 +41,10 @@ pub async fn generate_message(
     model: String,
     on_event: Channel<ChatResponseEvent>,
     message_id: Option<i64>,
+    knowledge_base: Option<String>,
 ) -> Result<(), String> {
     // 取出 message_id 之前（含）最近 context_num 条消息（作为上下文消息）
-    let nearest_messages = dbaccess::conversation::select_message_by_uuid(
+    let mut nearest_messages = dbaccess::conversation::select_message_by_uuid(
         db,
         assistant_uuid,
         Some(context_num as u64),
@@ -53,12 +59,61 @@ pub async fn generate_message(
         images: None,
     })
     .collect::<Vec<Message>>();
+    // 执行相似度查询
+    let ollama = state.ollama.read().await;
+    let search_result = if let Some(knowledge_base) = knowledge_base {
+        let knowledge_base =
+            dbaccess::knowledge_base::select_knowledge_base_by_name(db, &knowledge_base)
+                .await
+                .map_err(|e| e.to_string())?;
+        let query_embedding = ollama
+            .embedding(&EmbedRequestParameters {
+                model: knowledge_base.model,
+                input: vec![nearest_messages
+                    .first()
+                    .map(|m| m.content.clone())
+                    .unwrap_or_default()],
+            })
+            .await
+            .map_err(|e| e.to_string())?;
+        if let Some(query_embedding) = query_embedding.embeddings.first() {
+            let embedding_db = state.get_embedding_db().await?;
+            let search_result = dbaccess::embed::search_similar_embeddings(
+                &embedding_db,
+                &knowledge_base.name,
+                query_embedding,
+            )
+            .await
+            .map_err(|e| e.to_string())?;
+            on_event
+                .send(ChatResponseEvent::ReferenceContent {
+                    search_result: search_result.clone(),
+                })
+                .map_err(|e| e.to_string())?;
+            Some(search_result)
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+    // 将相似度查询结果加入到 nearest_messages first中
+    if let Some(search_result) = search_result.as_ref() {
+        if let Some(message) = nearest_messages.first_mut() {
+            let new_content = search_result
+                .iter()
+                .map(|sr| sr.content.clone()) // 克隆content以避免借用问题
+                .collect::<Vec<String>>()
+                .join("\n");
+
+            message.content = format!("{}\n{}", new_content, message.content);
+        }
+    }
     // 取出该 assistant 配置信息
     let para_value = dbaccess::assistant::select_assistant_config(db, assistant_uuid)
         .await
         .map_err(|e| e.to_string())?;
     // 向 Ollama 发送消息
-    let ollama = state.ollama.read().await;
     let mut chat_stream = ollama
         .chat(&ChatRequestParameters {
             model,
@@ -95,6 +150,7 @@ pub async fn generate_message(
                     message_id,
                     chat_response,
                     final_content,
+                    search_result,
                 )
                 .await
             } else {
@@ -103,6 +159,7 @@ pub async fn generate_message(
                     assistant_uuid,
                     chat_response,
                     final_content,
+                    search_result,
                 )
                 .await
             }
@@ -153,6 +210,7 @@ pub async fn user_send_message(
         model,
         on_event,
         None,
+        knowledge_base,
     )
     .await
 }
@@ -182,6 +240,7 @@ pub async fn regenerate_assistant_message(
         model,
         on_event,
         Some(message_id),
+        knowledge_base,
     )
     .await
 }

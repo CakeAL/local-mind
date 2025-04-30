@@ -8,6 +8,8 @@ use uuid::Uuid;
 
 use crate::models::conversation;
 
+use super::embed::SearchResult;
+
 /// 用来创建 conversation 表
 pub async fn create_conversation_table(db: &DbConn) -> Result<(), sea_orm::DbErr> {
     // 检查表是否存在
@@ -46,6 +48,7 @@ pub async fn insert_user_message(
         prompt_eval_duration: Set(0),
         eval_count: Set(0),
         eval_duration: Set(0),
+        search_result: Set(None),
         ..Default::default()
     };
     let new_message = new_message.insert(db).await?;
@@ -58,6 +61,7 @@ pub async fn insert_assistant_message(
     assistant_uuid: Uuid,
     chat_response: ChatResponse,
     content: String,
+    search_result: Option<Vec<SearchResult>>,
 ) -> Result<conversation::Model, sea_orm::DbErr> {
     let ChatResponse {
         model,
@@ -72,7 +76,7 @@ pub async fn insert_assistant_message(
         eval_duration,
         context: _,
     } = chat_response;
-    let new_message = conversation::ActiveModel {
+    let mut new_message = conversation::ActiveModel {
         assistant_uuid: Set(assistant_uuid),
         model: Set(model),
         created_at: Set(created_at),
@@ -86,6 +90,11 @@ pub async fn insert_assistant_message(
         eval_duration: Set(eval_duration.unwrap_or_default()),
         ..Default::default()
     };
+    if let Some(search_result) = search_result {
+        new_message.search_result = Set(Some(serde_json::json!(search_result)));
+    } else {
+        new_message.search_result = Set(None);
+    }
     let new_message = new_message.insert(db).await?;
     Ok(new_message)
 }
@@ -96,6 +105,7 @@ pub async fn update_assistant_message(
     message_id: i64,
     chat_response: ChatResponse,
     content: String,
+    search_result: Option<Vec<SearchResult>>,
 ) -> Result<conversation::Model, sea_orm::DbErr> {
     let message = conversation::Entity::find_by_id(message_id)
         .one(db)
@@ -110,6 +120,11 @@ pub async fn update_assistant_message(
     message.prompt_eval_duration = Set(chat_response.prompt_eval_duration.unwrap_or_default());
     message.eval_count = Set(chat_response.eval_count.unwrap_or_default());
     message.eval_duration = Set(chat_response.eval_duration.unwrap_or_default());
+    if let Some(search_result) = search_result {
+        message.search_result = Set(Some(serde_json::json!(search_result)));
+    } else {
+        message.search_result = Set(None);
+    }
     let updated_message = message.update(db).await?;
     Ok(updated_message)
 }

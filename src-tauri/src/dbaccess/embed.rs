@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use libsql::{Builder, Connection};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 pub async fn get_embedding_db_conn(app_data_path: &Path) -> Result<Connection, libsql::Error> {
     let embedding_db_path = app_data_path.join("embedding.db");
@@ -67,7 +67,7 @@ pub async fn delete_embedding_table(
     embedding_db.execute(&sql, ()).await
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SearchResult {
     pub content: String,
     pub file_path: String,

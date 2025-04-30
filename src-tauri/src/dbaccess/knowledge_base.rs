@@ -125,6 +125,21 @@ pub async fn select_all_knowledge_base(
     Ok(knowledge_bases)
 }
 
+/// 返回某知识库
+pub async fn select_knowledge_base_by_name(
+    db: &DbConn,
+    name: &str,
+) -> Result<knowledge_base::Model, sea_orm::DbErr> {
+    let knowledge_base = knowledge_base::Entity::find()
+        .filter(knowledge_base::Column::Name.eq(name))
+        .one(db)
+        .await?
+        .ok_or(sea_orm::DbErr::RecordNotFound(
+            "No Such Knowledge Base".into(),
+        ))?;
+    Ok(knowledge_base)
+}
+
 /// 删除某个知识库
 pub async fn delete_knowledge_base(db: &DbConn, name: String) -> Result<bool, sea_orm::DbErr> {
     let knowledge_base = knowledge_base::Entity::find()

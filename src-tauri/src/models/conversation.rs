@@ -19,6 +19,7 @@ pub struct Model {
     pub prompt_eval_duration: i64,
     pub eval_count: i64,
     pub eval_duration: i64,
+    pub search_result: Option<Json>, // 存储向量相似度搜索结果 assistant 对话
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
