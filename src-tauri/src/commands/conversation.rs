@@ -85,11 +85,6 @@ pub async fn generate_message(
             )
             .await
             .map_err(|e| e.to_string())?;
-            on_event
-                .send(ChatResponseEvent::ReferenceContent {
-                    search_result: search_result.clone(),
-                })
-                .map_err(|e| e.to_string())?;
             Some(search_result)
         } else {
             None
@@ -99,14 +94,33 @@ pub async fn generate_message(
     };
     // 将相似度查询结果加入到 nearest_messages first中
     if let Some(search_result) = search_result.as_ref() {
-        if let Some(message) = nearest_messages.first_mut() {
-            let new_content = search_result
-                .iter()
-                .map(|sr| sr.content.clone()) // 克隆content以避免借用问题
-                .collect::<Vec<String>>()
-                .join("\n");
-
-            message.content = format!("{}\n{}", new_content, message.content);
+        if search_result.len() > 0 {
+            on_event
+                .send(ChatResponseEvent::ReferenceContent {
+                    search_result: search_result.clone(),
+                })
+                .map_err(|e| e.to_string())?;
+            if let Some(message) = nearest_messages.first_mut() {
+                message.content = format!(
+                    "你是一位专业的知识库问答助手，擅长基于提供的参考资料回答用户的问题。
+## 参考资料：
+{}
+## 用户问题：
+{}
+## 回答要求：
+- 使用与提问者相同的语言作答。
+- 回答应基于上述参考资料，避免引入未提及的信息。
+- 如果参考资料中未包含相关信息，请明确指出“根据提供的资料，无法回答该问题”。
+请根据以上要求，生成对用户问题的回答。
+",
+                    search_result
+                        .iter()
+                        .map(|sr| sr.content.as_str())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                    message.content
+                );
+            }
         }
     }
     // 取出该 assistant 配置信息
@@ -114,6 +128,7 @@ pub async fn generate_message(
         .await
         .map_err(|e| e.to_string())?;
     // 向 Ollama 发送消息
+    // dbg!(&nearest_messages);
     let mut chat_stream = ollama
         .chat(&ChatRequestParameters {
             model,

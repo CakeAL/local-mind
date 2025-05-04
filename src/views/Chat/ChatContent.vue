@@ -6,8 +6,7 @@ import {
   newAssistantMessage,
   SearchResult,
 } from "@/models/conversation";
-import { copyToClipboard, openFileLocation, toFormatDateString } from "@/util";
-import { FolderOpenOutlined } from "@ant-design/icons-vue";
+import { copyToClipboard, toFormatDateString } from "@/util";
 import {
   CaretUpOutlined,
   CopyOutlined,
@@ -58,7 +57,6 @@ const sendButtonDisabled = computed(() => {
 });
 const sendButtonLoading = ref<boolean>(false);
 const conversation = ref<Message[]>([]);
-const fileActiveKey = ref("file");
 
 const getCurAssistantConversation = async () => {
   if (assistant !== null) {
@@ -218,10 +216,6 @@ const handleScrollBottom = () => {
     }
   });
 };
-
-const fileName = computed(() => (filePath: string) => {
-  return filePath.split(/[\\/]/).pop();
-});
 </script>
 <template>
   <a-layout class="chat-content-view">
@@ -258,46 +252,10 @@ const fileName = computed(() => (filePath: string) => {
                   </a-avatar>
                 </template>
               </a-list-item-meta>
-              <a-collapse
-                v-if="item.search_result"
-                v-model:activeKey="fileActiveKey"
-                style="margin-left: 48px"
-              >
-                <a-collapse-panel
-                  key="file"
-                  :header="$t('chat.reference')"
-                >
-                  <a-list
-                    bordered
-                    :data-source="item.search_result"
-                    class="file-list"
-                    size="small"
-                  >
-                    <template #renderItem="{ item }">
-                      <a-list-item>
-                        <a-popover>
-                          <template #content>{{ item.content }}</template>
-                          {{
-                            fileName(
-                              item.file_path,
-                            )
-                          }}</a-popover>
-                        <template #actions>
-                          <a-button
-                            size="small"
-                            class="action-button"
-                            @click="openFileLocation(item)"
-                          >
-                            <template #icon>
-                              <FolderOpenOutlined />
-                            </template>
-                          </a-button>
-                        </template>
-                      </a-list-item>
-                    </template>
-                  </a-list>
-                </a-collapse-panel></a-collapse>
-              <MarkdownRender :content="item.content" />
+              <MarkdownRender
+                :content="item.content"
+                :search-result="item.search_result"
+              />
               <template
                 #actions
                 class="item-actions"

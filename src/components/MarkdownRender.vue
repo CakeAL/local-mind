@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import { SearchResult } from "@/models/conversation";
 import md from "@/plugins/markdown";
 import { copyToClipboard } from "@/util";
-import { CopyOutlined } from "@ant-design/icons-vue";
+import { openFileLocation } from "@/util";
+import { CopyOutlined, FolderOpenOutlined } from "@ant-design/icons-vue";
 import parseReasoning from "parse-reasoning";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 const renderedHTML = ref<string>("");
 
-const { content = "" } = defineProps<{
+const { content = "", searchResult } = defineProps<{
   content?: string;
+  searchResult?: SearchResult[];
 }>();
 
 const { t } = useI18n();
@@ -47,15 +50,53 @@ const thinking = computed(() => {
     return t("thought");
   }
 });
+const fileName = computed(() => (filePath: string) => {
+  return filePath.split(/[\\/]/).pop();
+});
 </script>
 <template>
   <div class="markdown-body">
     <a-collapse
       v-model:activeKey="activeKey"
-      v-if="thought.length !== 0"
       style="margin: 5px 0"
+      v-if="thought.length !== 0 || searchResult"
     >
-      <a-collapse-panel key="1" :header="thinking">
+      <a-collapse-panel
+        key="file"
+        :header="$t('chat.reference')"
+        v-if="searchResult"
+      >
+        <a-list
+          bordered
+          :data-source="searchResult"
+          class="file-list"
+          size="small"
+        >
+          <template #renderItem="{ item }">
+            <a-list-item>
+              <a-popover>
+                <template #content>{{ item.content }}</template>
+                {{
+                  fileName(
+                    item.file_path,
+                  )
+                }}</a-popover>
+              <template #actions>
+                <a-button
+                  size="small"
+                  class="action-button"
+                  @click="openFileLocation(item)"
+                >
+                  <template #icon>
+                    <FolderOpenOutlined />
+                  </template>
+                </a-button>
+              </template>
+            </a-list-item>
+          </template>
+        </a-list>
+      </a-collapse-panel>
+      <a-collapse-panel key="1" :header="thinking" v-if="thought.length !== 0">
         {{ thought }}
         <template #extra>
           <a-spin v-if="thinking === t('thinking')" />

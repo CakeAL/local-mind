@@ -86,10 +86,10 @@ pub async fn search_similar_embeddings(
             vector_distance_cos(embedding, vector32(?1))
         FROM {knowledge_base_name}
         WHERE
-            vector_distance_cos(embedding, vector32(?1)) < 0.5
+            vector_distance_cos(embedding, vector32(?1)) < 0.7
         ORDER BY
-            vector_distance_cos(embedding, vector32(?1))
-        ASC"
+            vector_distance_cos(embedding, vector32(?1)) ASC
+        LIMIT 6"
     );
     let mut rows = embedding_db
         .query(&sql, libsql::params![query_embedding_str.as_str()])
@@ -192,10 +192,13 @@ mod tests {
             })
             .await
             .unwrap();
-        let res =
-            search_similar_embeddings(&embedding_db_conn, "测试", &embed_response.embeddings[0])
-                .await
-                .unwrap();
+        let res = search_similar_embeddings(
+            &embedding_db_conn,
+            "学生手册",
+            &embed_response.embeddings[0],
+        )
+        .await
+        .unwrap();
         dbg!(res);
     }
 }
