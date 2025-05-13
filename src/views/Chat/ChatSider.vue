@@ -155,7 +155,7 @@ const modelOptions = computed(() => {
       :showSettingIcon="true"
       :callback="() => selectThisAssistant(assistant)"
       :selected="assistant.uuid === chatStore.curAssistant?.uuid"
-      :buttonCallback="() => openAssistantConfigModal(chatStore.curAssistant!)"
+      :buttonCallback="() => openAssistantConfigModal(assistant)"
     />
     <a-divider style="margin: 0" v-if="assistants.length !== 0" />
     <SideItem

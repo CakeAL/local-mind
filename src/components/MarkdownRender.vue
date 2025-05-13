@@ -10,7 +10,7 @@ import { useI18n } from "vue-i18n";
 
 const renderedHTML = ref<string>("");
 
-const { content = "", searchResult } = defineProps<{
+const { content = "", searchResult = null } = defineProps<{
   content?: string;
   searchResult?: SearchResult[];
 }>();
@@ -50,6 +50,7 @@ const thinking = computed(() => {
     return t("thought");
   }
 });
+
 const fileName = computed(() => (filePath: string) => {
   return filePath.split(/[\\/]/).pop();
 });
@@ -85,7 +86,7 @@ const fileName = computed(() => (filePath: string) => {
                 <a-button
                   size="small"
                   class="action-button"
-                  @click="openFileLocation(item)"
+                  @click="openFileLocation(item.file_path)"
                 >
                   <template #icon>
                     <FolderOpenOutlined />
