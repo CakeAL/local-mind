@@ -128,6 +128,7 @@ pub async fn generate_message(
         .await
         .map_err(|e| e.to_string())?;
     // 向 Ollama 发送消息
+    nearest_messages.reverse();
     // dbg!(&nearest_messages);
     let mut chat_stream = ollama
         .chat(&ChatRequestParameters {
@@ -140,19 +141,21 @@ pub async fn generate_message(
     // 读取流
     let mut final_content = String::new();
     let mut final_res = None;
-    while let Some(Ok(res)) = chat_stream.next().await {
-        if res.done {
-            final_res = Some(res);
-        } else {
-            // 发送到前端
-            final_content.push_str(&res.message.content);
-            on_event
-                .send(ChatResponseEvent::Progress {
-                    model: res.model,
-                    create_at: res.created_at,
-                    content: res.message.content,
-                })
-                .map_err(|e| e.to_string())?;
+    while let Some(ress) = chat_stream.next().await {
+        for res in ress {
+            if res.done {
+                final_res = Some(res);
+            } else {
+                // 发送到前端
+                final_content.push_str(&res.message.content);
+                on_event
+                    .send(ChatResponseEvent::Progress {
+                        model: res.model,
+                        create_at: res.created_at,
+                        content: res.message.content,
+                    })
+                    .map_err(|e| e.to_string())?;
+            }
         }
     }
     // 如果 final_res 为 None，说明 Ollama 没有成功生成完整的对话

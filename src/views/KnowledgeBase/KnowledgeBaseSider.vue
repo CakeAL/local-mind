@@ -67,7 +67,6 @@ const modelOptions = computed(() => {
       v-for="(knowledgeBase, index) in knowledgeBases"
       :key="index"
       :title="knowledgeBase.name"
-      :showSettingIcon="true"
       :callback="() => selectThisKnowledgeBase(knowledgeBase)"
       :selected="knowledgeBase.name === knowledgeBaseStore.curKnowledgeBase?.name"
     />
