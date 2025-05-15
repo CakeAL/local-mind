@@ -11,7 +11,6 @@ import { computed, ref, watch } from "vue";
 const { knowledgeBase } = defineProps<{
   knowledgeBase: KnowledgeBaseInfo | null;
 }>();
-const fileActiveKey = ref("file");
 const files = ref<string[]>([]);
 
 const getCurKnowledgeBaseFiles = async () => {
@@ -84,7 +83,7 @@ const fileName = computed(() => (filePath: string) => {
 </script>
 <template>
   <div class="content-view" v-if="knowledgeBase">
-    <a-collapse v-model:activeKey="fileActiveKey" class="">
+    <a-collapse :accordion="true" activeKey="file" class="">
       <a-collapse-panel key="file" :header="$t('knowledge-base.file')">
         <a-spin :spinning="spinning" v-if="spinning">
           <a-alert

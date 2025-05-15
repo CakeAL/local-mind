@@ -17,6 +17,7 @@
     "@tauri-apps/plugin-opener": "^2.2.6",
     "@types/markdown-it": "^14.1.2",
     "ant-design-vue": "^4.2.6",
+    "github-markdown-css": "^5.8.1",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "parse-reasoning": "^1.0.5",

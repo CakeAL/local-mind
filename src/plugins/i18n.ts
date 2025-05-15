@@ -2,7 +2,22 @@ import { loadLocalemessages } from "@/locales";
 import type { App } from "vue";
 import { createI18n } from "vue-i18n";
 
-const locale = localStorage.getItem("locale") || "zh_CN";
+const locale = getLocale();
+
+function getLocale(): string {
+  const uiStr = localStorage.getItem("ui");
+  let locale = "";
+  if (uiStr) {
+    try {
+      const ui = JSON.parse(uiStr);
+      locale = ui.locale;
+    } catch (e) {
+      console.log(e);
+      locale = "zh_CN";
+    }
+  }
+  return locale;
+}
 
 export const i18n = createI18n({
   legacy: false,

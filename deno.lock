@@ -13,6 +13,7 @@
     "npm:@tauri-apps/plugin-shell@^2.2.1": "2.2.1",
     "npm:@types/markdown-it@^14.1.2": "14.1.2",
     "npm:ant-design-vue@^4.2.6": "4.2.6_vue@3.5.13__typescript@5.8.2_typescript@5.8.2",
+    "npm:github-markdown-css@^5.8.1": "5.8.1",
     "npm:highlight.js@^11.11.1": "11.11.1",
     "npm:markdown-it@^14.1.0": "14.1.0",
     "npm:parse-reasoning@^1.0.5": "1.0.5",
@@ -967,6 +968,9 @@
         "pathe"
       ]
     },
+    "github-markdown-css@5.8.1": {
+      "integrity": "sha512-8G+PFvqigBQSWLQjyzgpa2ThD9bo7+kDsriUIidGcRhXgmcaAWUIpCZf8DavJgc+xifjbCG+GvMyWr0XMXmc7g=="
+    },
     "glob-parent@5.1.2": {
       "integrity": "sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==",
       "dependencies": [
@@ -1743,6 +1747,7 @@
         "npm:@tauri-apps/plugin-shell@^2.2.1",
         "npm:@types/markdown-it@^14.1.2",
         "npm:ant-design-vue@^4.2.6",
+        "npm:github-markdown-css@^5.8.1",
         "npm:highlight.js@^11.11.1",
         "npm:markdown-it@^14.1.0",
         "npm:parse-reasoning@^1.0.5",

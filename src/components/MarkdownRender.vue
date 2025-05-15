@@ -7,6 +7,7 @@ import { CopyOutlined, FolderOpenOutlined } from "@ant-design/icons-vue";
 import parseReasoning from "parse-reasoning";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import "github-markdown-css";
 
 const renderedHTML = ref<string>("");
 
@@ -116,11 +117,25 @@ const fileName = computed(() => (filePath: string) => {
     <div v-html="renderedHTML"></div>
   </div>
 </template>
-<style scoped>
-@import "highlight.js/styles/github-dark.css";
+<style scoped lang="scss">
+// @import "highlight.js/styles/github-dark.css";
+@import url("highlight.js/styles/github.css")
+  screen and (prefers-color-scheme: light);
+@import url("highlight.js/styles/github-dark.css")
+  screen and (prefers-color-scheme: dark);
+
 .markdown-body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
   padding-left: 48px;
-  width: 99%;
-  overflow-y: auto;
+  padding-top: 16px;
+  background: none;
+}
+
+@media (max-width: 767px) {
+  .markdown-body {
+    padding: 15px;
+  }
 }
 </style>
