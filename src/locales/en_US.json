@@ -30,6 +30,15 @@
     "embedding": "Embedding...",
     "embedding-message": "This may take a while."
   },
+  "setting": {
+    "ui-setting": "UI Setting",
+    "theme-color": "Theme Color",
+    "dark-mode": "Dark Mode",
+    "language": "Language",
+    "dark": "Dark",
+    "light": "Light",
+    "auto": "Auto"
+  },
   "copied": "Copied",
   "thinking": "Thinking...",
   "thought": "Thought",

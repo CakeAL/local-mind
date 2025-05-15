@@ -1,6 +1,6 @@
 import Chat from "@/views/Chat/Chat.vue";
 import KnowledgeBase from "@/views/KnowledgeBase/KnowledgeBase.vue";
-import Setting from "@/views/Setting.vue";
+import Setting from "@/views/Setting/Setting.vue";
 import { createRouter } from "vue-router";
 import { createWebHistory } from "vue-router";
 
