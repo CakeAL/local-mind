@@ -2,7 +2,7 @@ use anyhow::Result;
 use commands::*;
 use models::app_state::AppState;
 use tauri::{async_runtime::spawn, AppHandle, Manager};
-use utils::{path, window};
+use utils::{path, setting::Setting, window};
 
 pub mod commands;
 pub mod dbaccess;
@@ -42,6 +42,9 @@ pub fn run() {
             knowledge_base::get_knowledge_base_files,
             knowledge_base::new_knowledge_base,
             knowledge_base::add_file_to_knowledge_base,
+            setting::get_ollama_url,
+            setting::set_ollama_url,
+            setting::check_ollama_online
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -55,5 +58,6 @@ async fn setup(app: AppHandle) -> Result<()> {
     let db_conn = dbaccess::get_db_conn(&app_data_path).await?;
     *state.db.write().await = db_conn;
     *state.embedding_db.write().await = Some(embedding_db_conn);
+    *state.setting.write().await = Setting::load(&app)?;
     Ok(())
 }

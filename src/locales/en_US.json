@@ -37,11 +37,16 @@
     "language": "Language",
     "dark": "Dark",
     "light": "Light",
-    "auto": "Auto"
+    "auto": "Auto",
+    "ollama-host": "Ollama Host",
+    "ollama-host-default": "The ollama default host is http://localhost:11434",
+    "ollama-online": "Ollama is online",
+    "ollama-offline": "Ollama is offline"
   },
   "copied": "Copied",
   "thinking": "Thinking...",
   "thought": "Thought",
   "upload-text": "Click or drag file to this area to upload",
-  "upload-hint": "Support pdf... format"
+  "upload-hint": "Support pdf... format",
+  "submit": "Submit"
 }

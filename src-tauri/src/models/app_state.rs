@@ -1,11 +1,14 @@
 use ollama_rust_api::Ollama;
 use tokio::sync::RwLock;
 
+use crate::utils::setting::Setting;
+
 #[derive(Default)]
 pub struct AppState {
     pub ollama: RwLock<Ollama>,
     pub db: RwLock<sea_orm::DbConn>,
     pub embedding_db: RwLock<Option<libsql::Connection>>,
+    pub setting: RwLock<Setting>,
 }
 
 impl AppState {

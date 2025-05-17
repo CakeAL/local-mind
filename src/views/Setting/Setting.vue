@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { useUIStore } from "@/stores/ui";
+import { ReloadOutlined } from "@ant-design/icons-vue";
+import { invoke } from "@tauri-apps/api/core";
 import { SelectProps } from "ant-design-vue";
-import { onMounted, ref } from "vue";
+import { message } from "ant-design-vue";
+import { h, onMounted, ref } from "vue";
+
 const activeKey = ref("1");
 const curLocale = ref("");
 const darkMode = ref("");
 const curThemeColor = ref("");
 const uiStore = useUIStore();
+const ollamaHost = ref("");
+const ollamaOnline = ref(false);
+
 const languageOption = ref<SelectProps["options"]>([
   {
     value: "zh_CN",
@@ -53,6 +60,8 @@ onMounted(() => {
   curLocale.value = uiStore.locale;
   darkMode.value = uiStore.darkMode;
   curThemeColor.value = uiStore.themeName;
+  getOllamaHost();
+  checkOllamaOnline();
 });
 
 const languageChange = () => {
@@ -65,6 +74,21 @@ const darkModeChange = () => {
 
 const themeColorChange = () => {
   uiStore.setThemeName(curThemeColor.value);
+};
+
+const getOllamaHost = async () => {
+  ollamaHost.value = await invoke<string>("get_ollama_url");
+};
+
+const updateOllamaHost = async () => {
+  await invoke<string>("set_ollama_url", {
+    url: ollamaHost.value,
+  }).catch((e) => message.warning(e));
+  checkOllamaOnline();
+};
+
+const checkOllamaOnline = async () => {
+  ollamaOnline.value = await invoke<boolean>("check_ollama_online");
 };
 </script>
 <template>
@@ -105,9 +129,43 @@ const themeColorChange = () => {
         </a-flex>
       </a-space>
     </a-tab-pane>
-    <a-tab-pane key="2" tab="Ollama" force-render
-    >Content of Tab Pane 2</a-tab-pane>
-    <a-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</a-tab-pane>
+    <a-tab-pane key="2" tab="Ollama" force-render>
+      <a-space direction="vertical" style="width: 100%">
+        <a-flex justify="space-between" align="center">
+          <h3>{{ $t("setting.ollama-host") }}</h3>
+          <a-popover placement="top">
+            <template #content>
+              <p style="margin: 0; font-size: small">
+                {{ $t("setting.ollama-host-default") }}
+              </p>
+            </template>
+            <a-input-search
+              v-model:value="ollamaHost"
+              placeholder="Ollama Host Url"
+              style="max-width: 600px"
+              :enter-button="$t('submit')"
+              @search="updateOllamaHost"
+            />
+          </a-popover>
+        </a-flex>
+        <a-alert
+          :message="
+            ollamaOnline
+            ? $t('setting.ollama-online')
+            : $t('setting.ollama-offline')
+          "
+          :type="ollamaOnline ? 'success' : 'warning'"
+          show-icon
+        ><template #action>
+            <a-button
+              size="small"
+              type="circle"
+              :icon="h(ReloadOutlined)"
+              @click="checkOllamaOnline"
+            ></a-button>
+          </template></a-alert>
+      </a-space>
+    </a-tab-pane>
   </a-tabs>
 </template>
 <style scoped>

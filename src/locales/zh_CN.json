@@ -37,11 +37,16 @@
     "language": "语言",
     "dark": "深色",
     "light": "浅色",
-    "auto": "自动"
+    "auto": "自动",
+    "ollama-host": "Ollama 地址",
+    "ollama-host-default": "ollama 默认地址是 http://localhost:11434",
+    "ollama-online": "当前 Ollama 在线",
+    "ollama-offline": "当前 Ollama 离线"
   },
   "copied": "已复制",
   "thinking": "思考中...",
   "thought": "已思考",
   "upload-text": "点击或拖拽文件到此区域上传",
-  "upload-hint": "支持 pdf... 格式"
+  "upload-hint": "支持 pdf... 格式",
+  "submit": "提交"
 }
