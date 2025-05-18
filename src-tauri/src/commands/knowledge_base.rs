@@ -12,7 +12,7 @@ use crate::{
         },
     },
     models::{app_state::AppState, knowledge_base::KnowledgeBaseInfo},
-    utils::path,
+    utils::{parse_file::parse_file, path},
 };
 
 #[tauri::command]
@@ -54,35 +54,6 @@ pub async fn get_knowledge_base_files(
     select_knowledge_base_files(&db, name)
         .await
         .map_err(|e| e.to_string())
-}
-
-/// 应该传入拷贝后的文件，返回提取出来的文字（按照1024分割（默认））
-fn parse_file(file_path: &PathBuf) -> Result<Vec<String>, String> {
-    let extension = file_path.extension();
-    let full_text = match extension {
-        Some(ext) if ext == "pdf" => {
-            dbg!(&file_path);
-            let bytes = std::fs::read(file_path).unwrap();
-            let output = pdf_extract::extract_text_from_mem(&bytes)
-                .map_err(|e| e.to_string())?
-                .replace("\n", " ")
-                .replace("\r", " ")
-                .split_whitespace()
-                .collect::<Vec<_>>()
-                .join(" ");
-            output
-        }
-        _ => String::new(),
-    };
-    let chunk_size = 1024;
-    let chunks: Vec<String> = full_text
-        .chars()
-        .collect::<Vec<_>>()
-        .chunks(chunk_size)
-        .map(|chunk| chunk.iter().collect())
-        .collect();
-
-    Ok(chunks)
 }
 
 /// 传过来的 file 应该都是有效的文件

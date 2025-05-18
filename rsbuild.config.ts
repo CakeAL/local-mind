@@ -9,7 +9,9 @@ const host = process.env.TAURI_DEV_HOST;
 export default defineConfig({
   plugins: [
     pluginVue(),
-    pluginSass(),
+    pluginSass({
+      rewriteUrls: false,
+    }),
   ],
   tools: {
     rspack: {

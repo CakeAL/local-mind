@@ -20,6 +20,7 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 anyhow = "1"
 chrono = "0.4"
+dotext = "0.1.1"
 libsql = { version = "0.9.5", features = ["core"] }
 ollama-rust-api = { git = "https://github.com/CakeAL/ollama-rust-api" }
 pdf-extract = "0.9"
