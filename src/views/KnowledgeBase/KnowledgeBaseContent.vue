@@ -38,7 +38,7 @@ const openFileDialog = async () => {
     filters: [
       {
         name: "Files",
-        extensions: ["pdf"],
+        extensions: ["pdf", "docx", "pptx", "xlsx"],
       },
     ],
   });

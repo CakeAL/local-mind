@@ -32,7 +32,7 @@ pub async fn insert_assistant(
     model: String,
 ) -> Result<assistant::Model, sea_orm::DbErr> {
     let new_assistant = assistant::ActiveModel {
-        name: Set("Default Assistant".to_string()),
+        name: Set(model.clone()),
         model: Set(model),
         uuid: Set(Uuid::new_v4()),
         parameter: Set(serde_json::json!(Parameter {
