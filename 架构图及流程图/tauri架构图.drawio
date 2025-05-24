@@ -1,0 +1,43 @@
+<mxfile host="65bd71144e" scale="3" border="0">
+    <diagram id="3K3eIDOVHIDonhdETbXk" name="第 1 页">
+        <mxGraphModel dx="907" dy="634" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="11" style="edgeStyle=none;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="2" target="8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="230" width="410" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Tauri核心进程" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="230" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="窗口管理（Tao/Wry）&lt;div&gt;系统交互（菜单、托盘、通知）&lt;/div&gt;&lt;div&gt;全局状态管理&lt;/div&gt;&lt;div&gt;IPC消息过滤&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="220" y="260" width="370" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="系统Webview" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="220" y="320" width="370" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" style="edgeStyle=none;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="8" target="2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="100" width="410" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="前端" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="100" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Vue等前端框架" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="322.5" y="120" width="165" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="IPC通信（命令，事件，管道等）" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="310" y="200" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Tauri JS API 提供系统调用" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="322.5" y="150" width="165" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
